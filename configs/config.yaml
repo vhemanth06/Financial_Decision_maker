@@ -1,0 +1,112 @@
+seed:
+  numpy: 42
+  torch: 42
+  xgboost: 42
+
+assets:
+  tickers:
+    - BTC
+    - TSLA
+    - MSFT
+    - ETH
+    - BMRN
+    - MRNA
+
+paths:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  embeddings_dir: "data/embeddings"
+  consolidated_data: "data/processed/consolidated.parquet"
+  labeled_data: "data/processed/labeled.parquet"
+  finbert_embeddings: "data/embeddings/finbert_768.npy"
+  finbert_pca_embeddings: "data/embeddings/finbert_pca30.npy"
+  pca_model: "data/embeddings/finbert_pca_model.pkl"
+  xgb_model: "data/processed/xgb_model.json"
+
+dataset:
+  hf_dataset_name: "clef2026/financial_daily_news"
+  hf_split: "train"
+  hf_asset_subsets: {}
+  hf_token: "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"
+  hf_token_env_var: "HF_TOKEN"
+  hf_use_auth_token: true
+  allow_synthetic_fallback: true
+  synthetic_rows_per_asset: 120
+  synthetic_start_date: "2021-01-01"
+  asset_column_candidates: ["asset", "ticker", "symbol"]
+  date_column_candidates: ["date", "datetime", "timestamp", "published_at"]
+  price_column: "prices"
+  momentum_column: "momentum"
+  news_column: "news"
+  tenk_column: "filing_10k"
+  tenq_column: "filing_10q"
+  normalized_asset_column: "asset"
+  normalized_date_column: "date"
+  normalized_momentum_column: "momentum_numeric"
+  normalized_text_column: "news_combined"
+  momentum_mapping:
+    bullish: 1
+    bearish: -1
+    missing: 0
+
+features:
+  tabular_columns:
+    - prices
+    - momentum_numeric
+  text_column: "news_combined"
+  target_column: "target"
+
+labels:
+  horizon_days: 1
+  rolling_window: 20
+  rolling_min_periods: 5
+  vol_multiplier: 1.0
+  threshold_grid: [0.5, 0.75, 1.0, 1.25, 1.5]
+
+finbert:
+  model_name: "ProsusAI/finbert"
+  device: "auto"
+  batch_size: 16
+  max_length: 256
+  use_fp16_on_cuda: true
+  pca_components: 30
+
+xgboost:
+  objective: "multi:softprob"
+  num_class: 3
+  eval_metric: "mlogloss"
+  n_estimators: 400
+  max_depth: 5
+  learning_rate: 0.05
+  subsample: 0.9
+  colsample_bytree: 0.9
+  reg_lambda: 1.0
+  min_child_weight: 1.0
+  gamma: 0.0
+  tree_method: "hist"
+  n_jobs: 4
+  confidence_threshold: 0.45
+  confidence_threshold_grid: [0.35, 0.40, 0.45, 0.50, 0.55]
+
+rationale:
+  max_words: 50
+  context_char_limit: 1200
+  confidence_low: 0.45
+  confidence_high: 0.60
+  positive_keywords: ["beat", "growth", "upside", "inflow", "rally", "upgrade", "bullish", "surge", "record"]
+  negative_keywords: ["miss", "downgrade", "outflow", "lawsuit", "risk", "decline", "bearish", "drop", "selloff"]
+
+cpcv:
+  n_splits: 6
+  n_test_splits: 2
+  purge_window: 5
+
+evaluation:
+  annualization_factor: 252
+  transaction_fee_bps: 5
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  fallback_decision: "HOLD"
+  fallback_rationale: "System fallback triggered due to data anomaly."

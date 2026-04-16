@@ -1,0 +1,19 @@
+pandas>=2.2.2,<3.0
+numpy>=1.26.4,<2.0
+xgboost>=2.1.0,<4.0
+scikit-learn>=1.5.1,<2.0
+fastapi>=0.112.0,<1.0
+uvicorn>=0.30.0,<1.0
+pyyaml>=6.0.1,<7.0
+tqdm>=4.66.5,<5.0
+datasets>=2.20.0,<3.0
+pyarrow>=17.0.0,<20.0
+
+# ML / DL (CPU-only)
+torch==2.2.2+cpu
+torchvision==0.17.2+cpu
+torchaudio==2.2.2+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# Keep transformers on the 4.x line for torch 2.2 compatibility.
+transformers>=4.42.0,<5.0
