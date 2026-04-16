@@ -24,9 +24,17 @@ paths:
   xgb_model: "data/processed/xgb_model.json"
 
 dataset:
-  hf_dataset_name: "clef2026/financial_daily_news"
-  hf_split: "train"
+  hf_dataset_name: "TheFinAI/daily_news"
+  hf_split: ""
   hf_asset_subsets: {}
+  hf_parquet_repo: "TheFinAI/daily_news"
+  hf_parquet_paths:
+    BTC: "data/BTC-00000-of-00001.parquet"
+    TSLA: "data/TSLA-00000-of-00001.parquet"
+    MSFT: "data/MSFT-00000-of-00001.parquet"
+    ETH: "data/ETH-00000-of-00001.parquet"
+    BMRN: "data/BMRN-00000-of-00001.parquet"
+    MRNA: "data/MRNA-00000-of-00001.parquet"
   hf_token: "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"
   hf_token_env_var: "HF_TOKEN"
   hf_use_auth_token: true

@@ -54,19 +54,50 @@ def _resolve_hf_token(dataset_cfg: dict[str, Any]) -> Optional[str]:
     Returns:
         Token string when available, else None.
     """
+    token_env_var = _sanitize_env_var_name(str(dataset_cfg.get("hf_token_env_var", "HF_TOKEN")).strip())
+
     configured_token = str(dataset_cfg.get("hf_token", "")).strip()
-    if configured_token:
+    if configured_token and not _looks_like_token_placeholder(configured_token, token_env_var):
         return configured_token
 
-    token_env_var = _sanitize_env_var_name(str(dataset_cfg.get("hf_token_env_var", "HF_TOKEN")).strip())
-    if not token_env_var:
-        return None
-
     env_token = os.getenv(token_env_var, "").strip()
-    if env_token:
+    if env_token and not _looks_like_token_placeholder(env_token, token_env_var):
         return env_token
 
     return None
+
+
+def _looks_like_token_placeholder(value: str, token_env_var: str) -> bool:
+    """Detect placeholder token strings that should not be used for auth.
+
+    Args:
+        value: Candidate token text.
+        token_env_var: Configured environment variable name.
+
+    Returns:
+        True when value appears to be a placeholder, otherwise False.
+    """
+    normalized = value.strip()
+    if not normalized:
+        return True
+
+    upper_value = normalized.upper()
+    known_placeholders = {
+        "HF_TOKEN",
+        "HUGGINGFACE_TOKEN",
+        "YOUR_HUGGINGFACE_TOKEN",
+        "YOUR_TOKEN",
+        "TOKEN",
+        "NONE",
+        "NULL",
+    }
+    if upper_value in known_placeholders:
+        return True
+
+    if normalized in {token_env_var, f"${token_env_var}", f"${{{token_env_var}}}"}:
+        return True
+
+    return False
 
 
 def _sanitize_env_var_name(candidate: str) -> str:
@@ -116,6 +147,115 @@ def _load_hf_dataset(
         if subset_name is None:
             return load_dataset(dataset_name, **legacy_kwargs)
         return load_dataset(dataset_name, subset_name, **legacy_kwargs)
+
+
+def _try_hf_login(token: Optional[str]) -> None:
+    """Attempt an explicit Hugging Face login for hf:// parquet access.
+
+    Args:
+        token: Optional HF token.
+    """
+    if not token:
+        return
+
+    try:
+        from huggingface_hub import login
+
+        login(token=token, add_to_git_credential=False)
+        LOGGER.info("Authenticated with huggingface_hub.login")
+    except Exception as error:  # pragma: no cover - external auth variability
+        LOGGER.warning("huggingface_hub login failed; continuing with tokenized access: %s", error)
+
+
+def _build_default_hf_parquet_paths(assets: list[str]) -> dict[str, str]:
+    """Build default asset->relative parquet path mapping for hf:// reads.
+
+    Args:
+        assets: Configured asset tickers.
+
+    Returns:
+        Mapping from uppercase ticker to relative parquet path.
+    """
+    return {
+        asset.upper(): f"data/{asset.upper()}-00000-of-00001.parquet"
+        for asset in assets
+    }
+
+
+def _build_hf_storage_options(token: Optional[str]) -> dict[str, Any]:
+    """Build storage options for fsspec hf:// access.
+
+    Args:
+        token: Optional authentication token.
+
+    Returns:
+        Storage options dictionary for pandas.read_parquet.
+    """
+    if not token:
+        return {}
+    return {"token": token}
+
+
+def _load_hf_parquet_frame(uri: str, token: Optional[str]) -> pd.DataFrame:
+    """Load one dataframe from hf:// parquet URI.
+
+    Args:
+        uri: Full hf:// parquet URI.
+        token: Optional token used by storage_options.
+
+    Returns:
+        Loaded dataframe.
+    """
+    storage_options = _build_hf_storage_options(token)
+    if storage_options:
+        return pd.read_parquet(uri, storage_options=storage_options)
+    return pd.read_parquet(uri)
+
+
+def _load_asset_frames_from_hf_parquet(
+    dataset_cfg: dict[str, Any],
+    assets: list[str],
+    token: Optional[str],
+) -> dict[str, pd.DataFrame]:
+    """Load per-asset frames using direct hf:// parquet paths.
+
+    Args:
+        dataset_cfg: Dataset configuration dictionary.
+        assets: List of configured tickers.
+        token: Optional token for authenticated dataset access.
+
+    Returns:
+        Mapping from ticker to dataframe for successfully loaded assets.
+    """
+    repo_id = str(dataset_cfg.get("hf_parquet_repo", dataset_cfg.get("hf_dataset_name", ""))).strip()
+    if not repo_id:
+        return {}
+
+    configured_paths = dataset_cfg.get("hf_parquet_paths", {})
+    if configured_paths:
+        parquet_paths = {
+            str(asset_key).strip().upper(): str(path_value).strip().lstrip("/")
+            for asset_key, path_value in dict(configured_paths).items()
+            if str(path_value).strip()
+        }
+    else:
+        parquet_paths = _build_default_hf_parquet_paths(assets)
+
+    loaded_frames: dict[str, pd.DataFrame] = {}
+    for asset in assets:
+        relative_path = parquet_paths.get(asset.upper())
+        if not relative_path:
+            continue
+
+        uri = f"hf://datasets/{repo_id}/{relative_path}"
+        try:
+            frame = _load_hf_parquet_frame(uri=uri, token=token)
+            loaded_frames[asset] = frame
+            LOGGER.info("Loaded %d rows for %s from %s", len(frame), asset, uri)
+        except Exception as error:  # pragma: no cover - network and dataset variability
+            LOGGER.error("Failed hf:// parquet read for %s from %s: %s", asset, uri, error)
+
+    return loaded_frames
 
 
 def _create_synthetic_asset_frame(
@@ -228,7 +368,7 @@ def fetch_assets(config: dict[str, Any]) -> dict[str, Path]:
     assets = config["assets"]["tickers"]
 
     dataset_name = dataset_cfg["hf_dataset_name"]
-    split_name = dataset_cfg["hf_split"]
+    split_name = str(dataset_cfg.get("hf_split", "")).strip()
     asset_column_candidates = dataset_cfg["asset_column_candidates"]
     normalized_asset_column = dataset_cfg["normalized_asset_column"]
     subset_map = dataset_cfg.get("hf_asset_subsets", {})
@@ -241,21 +381,34 @@ def fetch_assets(config: dict[str, Any]) -> dict[str, Path]:
     else:
         LOGGER.info("No Hugging Face token detected; attempting public dataset access.")
 
+    _try_hf_login(hf_token)
+
     raw_dir = Path(paths_cfg["raw_dir"])
     raw_dir.mkdir(parents=True, exist_ok=True)
 
+    parquet_frames = _load_asset_frames_from_hf_parquet(
+        dataset_cfg=dataset_cfg,
+        assets=assets,
+        token=hf_token,
+    )
+
     shared_frame: Optional[pd.DataFrame] = None
-    try:
-        LOGGER.info("Loading shared dataset '%s' split '%s'", dataset_name, split_name)
-        shared_dataset = _load_hf_dataset(
-            dataset_name=dataset_name,
-            split_name=split_name,
-            token=hf_token,
-        )
-        shared_frame = shared_dataset.to_pandas()
-        LOGGER.info("Loaded shared dataset with %d rows", len(shared_frame))
-    except Exception as error:  # pragma: no cover - network and dataset variability
-        LOGGER.warning("Shared dataset load failed, falling back to subset loads: %s", error)
+    if split_name and len(parquet_frames) < len(assets):
+        try:
+            LOGGER.info("Loading shared dataset '%s' split '%s'", dataset_name, split_name)
+            shared_dataset = _load_hf_dataset(
+                dataset_name=dataset_name,
+                split_name=split_name,
+                token=hf_token,
+            )
+            shared_frame = shared_dataset.to_pandas()
+            LOGGER.info("Loaded shared dataset with %d rows", len(shared_frame))
+        except Exception as error:  # pragma: no cover - network and dataset variability
+            LOGGER.warning("Shared dataset load failed, falling back to subset loads: %s", error)
+    elif not split_name:
+        LOGGER.info("No shared split configured; skipping shared split loader.")
+    else:
+        LOGGER.info("All assets resolved via hf:// parquet; skipping shared split loader.")
 
     output_paths: dict[str, Path] = {}
     for asset in assets:
@@ -266,6 +419,9 @@ def fetch_assets(config: dict[str, Any]) -> dict[str, Path]:
             if asset_column is not None:
                 mask = shared_frame[asset_column].astype(str).str.upper() == asset.upper()
                 asset_frame = shared_frame.loc[mask].copy()
+
+        if asset_frame.empty and asset in parquet_frames:
+            asset_frame = parquet_frames[asset].copy()
 
         if asset_frame.empty:
             subset_name = subset_map.get(asset, asset)
@@ -285,7 +441,9 @@ def fetch_assets(config: dict[str, Any]) -> dict[str, Path]:
                 asset_frame = subset_dataset.to_pandas()
             except Exception as error:  # pragma: no cover - network and dataset variability
                 LOGGER.error("Failed to fetch asset '%s': %s", asset, error)
-                continue
+
+        if asset_frame.empty:
+            continue
 
         if normalized_asset_column not in asset_frame.columns:
             asset_frame[normalized_asset_column] = asset
