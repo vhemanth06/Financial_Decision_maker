@@ -35,7 +35,7 @@ dataset:
     ETH: "data/ETH-00000-of-00001.parquet"
     BMRN: "data/BMRN-00000-of-00001.parquet"
     MRNA: "data/MRNA-00000-of-00001.parquet"
-  hf_token: "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"
+  hf_token: "ur token here"
   hf_token_env_var: "HF_TOKEN"
   hf_use_auth_token: true
   allow_synthetic_fallback: true
