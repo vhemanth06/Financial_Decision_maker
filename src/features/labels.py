@@ -34,7 +34,8 @@ def generate_targets_with_dynamic_threshold(
     horizon_days: int,
     rolling_window: int,
     rolling_min_periods: int,
-    vol_multiplier: float,
+    vol_multiplier_buy: float,
+    vol_multiplier_sell: float,
 ) -> pd.DataFrame:
     """Create return labels using a rolling volatility-dependent threshold.
 
@@ -50,7 +51,8 @@ def generate_targets_with_dynamic_threshold(
         horizon_days: Forecast horizon in days.
         rolling_window: Rolling window size for volatility estimation.
         rolling_min_periods: Minimum observations for rolling statistics.
-        vol_multiplier: Multiplier applied to rolling volatility to produce tau.
+        vol_multiplier_buy: Multiplier for buy signal threshold.
+        vol_multiplier_sell: Multiplier for sell signal threshold.
 
     Returns:
         Dataframe with added columns: future_price_diff, future_return, tau, target.
@@ -75,11 +77,13 @@ def generate_targets_with_dynamic_threshold(
     if np.isnan(fallback_volatility):
         fallback_volatility = 0.0
 
-    labeled["tau"] = rolling_volatility.fillna(fallback_volatility).abs() * vol_multiplier
+    rolling_volatility = rolling_volatility.fillna(fallback_volatility).abs()
+    labeled["tau_buy"] = rolling_volatility * vol_multiplier_buy
+    labeled["tau_sell"] = rolling_volatility * vol_multiplier_sell
 
     labeled[target_column] = 0
-    labeled.loc[labeled["future_return"] > labeled["tau"], target_column] = 1
-    labeled.loc[labeled["future_return"] < -labeled["tau"], target_column] = -1
+    labeled.loc[labeled["future_return"] > labeled["tau_buy"], target_column] = 1
+    labeled.loc[labeled["future_return"] < -labeled["tau_sell"], target_column] = -1
 
     return labeled
 
@@ -103,21 +107,22 @@ def build_labeled_dataset(config: dict[str, Any]) -> pd.DataFrame:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     frame = pd.read_parquet(input_path)
-    labeled = generate_targets_with_dynamic_threshold(
+    labeled_frame = generate_targets_with_dynamic_threshold(
         frame=frame,
         asset_column=dataset_cfg["normalized_asset_column"],
         date_column=dataset_cfg["normalized_date_column"],
         price_column=dataset_cfg["price_column"],
         target_column=features_cfg["target_column"],
-        horizon_days=labels_cfg["horizon_days"],
-        rolling_window=labels_cfg["rolling_window"],
-        rolling_min_periods=labels_cfg["rolling_min_periods"],
-        vol_multiplier=labels_cfg["vol_multiplier"],
+        horizon_days=int(labels_cfg["horizon_days"]),
+        rolling_window=int(labels_cfg["rolling_window"]),
+        rolling_min_periods=int(labels_cfg["rolling_min_periods"]),
+        vol_multiplier_buy=float(labels_cfg["vol_multiplier_buy"]),
+        vol_multiplier_sell=float(labels_cfg["vol_multiplier_sell"]),
     )
 
-    labeled.to_parquet(output_path, index=False)
-    LOGGER.info("Saved labeled dataset with %d rows -> %s", len(labeled), output_path)
-    return labeled
+    labeled_frame.to_parquet(output_path, index=False)
+    LOGGER.info("Saved labeled dataset with %d rows -> %s", len(labeled_frame), output_path)
+    return labeled_frame
 
 
 def parse_args() -> argparse.Namespace:

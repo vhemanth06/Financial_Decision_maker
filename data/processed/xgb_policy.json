@@ -1,0 +1,8 @@
+{
+  "confidence_threshold": 0.7,
+  "directional_edge_threshold": 0.04,
+  "hold_probability_cap": 0.45,
+  "sharpe_ratio": 0.0,
+  "turnover": 0.0,
+  "objective": 0.0
+}

@@ -61,6 +61,27 @@ def _decode_classes(class_ids: np.ndarray) -> np.ndarray:
     return np.array([CLASS_TO_LABEL[int(class_id)] for class_id in class_ids], dtype=np.int8)
 
 
+def _calculate_rsi(series: pd.Series, window: int = 14) -> pd.Series:
+    """Calculate RSI."""
+    delta = series.diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
+    rs = gain / loss
+    return 100 - (100 / (1 + rs))
+
+
+def _calculate_ma_ratio(series: pd.Series, short_window: int = 10, long_window: int = 30) -> pd.Series:
+    """Calculate moving average ratio."""
+    short_ma = series.rolling(window=short_window).mean()
+    long_ma = series.rolling(window=long_window).mean()
+    return short_ma / long_ma
+
+
+def _calculate_rolling_vol(series: pd.Series, window: int = 20) -> pd.Series:
+    """Calculate rolling volatility of returns."""
+    return series.pct_change().rolling(window=window).std()
+
+
 def build_feature_matrix(
     frame: pd.DataFrame,
     reduced_embeddings: np.ndarray,
@@ -86,6 +107,13 @@ def build_feature_matrix(
             "Row mismatch between dataframe and embeddings: "
             f"{len(frame)} != {reduced_embeddings.shape[0]}"
         )
+
+    # --- Start: Technical Indicator Generation ---
+    grouped_prices = frame.groupby("asset")["prices"]
+    frame["rsi_14d"] = grouped_prices.transform(_calculate_rsi)
+    frame["ma_ratio_10_30"] = grouped_prices.transform(_calculate_ma_ratio)
+    frame["vol_20d"] = grouped_prices.transform(_calculate_rolling_vol)
+    # --- End: Technical Indicator Generation ---
 
     tabular = (
         frame[tabular_columns]

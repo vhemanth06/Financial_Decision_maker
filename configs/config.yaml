@@ -35,7 +35,7 @@ dataset:
     ETH: "data/ETH-00000-of-00001.parquet"
     BMRN: "data/BMRN-00000-of-00001.parquet"
     MRNA: "data/MRNA-00000-of-00001.parquet"
-  hf_token: "YOUR HF READ TOKEN TO BE KEPT HERE, ONLY HERE ONLY HERE"
+  hf_token: "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"
   hf_token_env_var: "HF_TOKEN"
   hf_use_auth_token: true
   allow_synthetic_fallback: true
@@ -61,6 +61,9 @@ features:
   tabular_columns:
     - prices
     - momentum_numeric
+    - rsi_14d
+    - ma_ratio_10_30
+    - vol_20d
   text_column: "news_combined"
   target_column: "target"
 
@@ -68,7 +71,8 @@ labels:
   horizon_days: 1
   rolling_window: 20
   rolling_min_periods: 5
-  vol_multiplier: 1.0
+  vol_multiplier_buy: 1.25
+  vol_multiplier_sell: 1.0
   threshold_grid: [0.5, 0.75, 1.0, 1.25, 1.5]
 
 finbert:
@@ -77,7 +81,7 @@ finbert:
   batch_size: 16
   max_length: 256
   use_fp16_on_cuda: true
-  pca_components: 30
+  pca_components: 50
 
 xgboost:
   objective: "multi:softprob"
@@ -93,7 +97,7 @@ xgboost:
   gamma: 0.0
   tree_method: "hist"
   n_jobs: 4
-  confidence_threshold: 0.45
+  confidence_threshold: 0.55
   confidence_threshold_grid: [0.35, 0.40, 0.45, 0.50, 0.55]
 
 rationale:
