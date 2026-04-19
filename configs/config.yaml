@@ -22,6 +22,7 @@ paths:
   finbert_pca_embeddings: "data/embeddings/finbert_pca30.npy"
   pca_model: "data/embeddings/finbert_pca_model.pkl"
   xgb_model: "data/processed/xgb_model.json"
+  xgb_policy: "data/processed/xgb_policy.json"
 
 dataset:
   hf_dataset_name: "TheFinAI/daily_news"
@@ -35,7 +36,7 @@ dataset:
     ETH: "data/ETH-00000-of-00001.parquet"
     BMRN: "data/BMRN-00000-of-00001.parquet"
     MRNA: "data/MRNA-00000-of-00001.parquet"
-  hf_token: ""
+  hf_token: "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"
   hf_token_env_var: "HF_TOKEN"
   hf_use_auth_token: true
   allow_synthetic_fallback: true
@@ -64,11 +65,12 @@ features:
     - rsi_14d
     - ma_ratio_10_30
     - vol_20d
+  api_price_history_window: 60
   text_column: "news_combined"
   target_column: "target"
 
 labels:
-  horizon_days: 1
+  horizon_days: 5
   rolling_window: 20
   rolling_min_periods: 5
   vol_multiplier_buy: 1.25
@@ -87,9 +89,9 @@ xgboost:
   objective: "multi:softprob"
   num_class: 3
   eval_metric: "mlogloss"
-  n_estimators: 400
-  max_depth: 5
-  learning_rate: 0.05
+  n_estimators: 700
+  max_depth: 4
+  learning_rate: 0.03
   subsample: 0.9
   colsample_bytree: 0.9
   reg_lambda: 1.0
@@ -97,8 +99,11 @@ xgboost:
   gamma: 0.0
   tree_method: "hist"
   n_jobs: 4
-  confidence_threshold: 0.55
-  confidence_threshold_grid: [0.35, 0.40, 0.45, 0.50, 0.55]
+  confidence_threshold: 0.70
+  confidence_threshold_grid: [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75]
+  directional_edge_threshold: 0.0
+  hold_probability_cap: 1.0
+  use_class_balancing: true
 
 rationale:
   max_words: 50

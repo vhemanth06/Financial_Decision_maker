@@ -1,0 +1,267 @@
+{
+  "date": "2025-12-18",
+  "price": {
+    "BMRN": 51.95000076293945
+  },
+  "symbol": {
+    "BMRN": "BMRN"
+  },
+  "momentum": {
+    "BMRN": "bearish"
+  },
+  "news": {
+    "BMRN": [
+      "Over the span of December 17 to December 19, 2025, BioMarin Pharmaceutical Inc. (BMRN) exhibited a pattern of modest daily gains followed by a powerful intraday rally, as reported by two market data sources cited in the articles. The coverage emphasizes a narrative of gradual upward price movement during the initial days and a surge driven by broader biotech optimism and higher speculative activity on the final day. On December 17, 2025, the reporting notes a slight uptick in BMRN\u2019s price compared with the prior session, according to historical data published by ca.investing.com. The following day, December 18, 2025, continued with a modest rise, again reflected in ca.investing.com\u2019s data. These entries frame a period of subdued, incremental advances rather than abrupt shifts in sentiment. By December 19, 2025, the articles describe a markedly stronger development: BMRN experienced a significant intraday rally, driven by optimism within the biotech sector and an accompanying surge in options activity. This particular surge is attributed to broader sector enthusiasm and heightened speculative interest, as reported by ainvest.com. The description underscores a shift from small daily gains to a pronounced move higher in the session. The articles collectively also highlight notable social media activity around BMRN during this window, signaling heightened public and possibly investor chatter in parallel with the price moves. This emphasis on social media engagement appears alongside the price actions as part of the narrative of market dynamics during these days. Key themes and developments: - Modest daily gains in mid- to late December, followed by a pronounced intraday rally on the final day referenced. - A shift in sentiment from incremental advances to a bullish, news-driven or sentiment-driven surge on December 19. - The December 19 move is explicitly linked to optimism in the biotech sector and a notable increase in options activity, suggesting a heightened level of speculative participation. - Social media activity is highlighted as a notable contextual factor during this period, indicating broader discussion and potential influence on perceptions around BMRN. Overall market sentiment based on these articles: - The period shows an initial cautious or moderately positive tone, with small gains on consecutive days. - The late-episode surge signals a more bullish and speculatively spirited mood, tied to optimism about the biotech sector and increased options activity. - The sentiment assessment is supported by the attribution of the December 19 rally to sector optimism and options frenzy, while no explicit sentiment score is provided in the articles. Sources cited indicate ca.investing.com as the source for the December 17 and December 18 price movement data, and ainvest.com as the source describing the December 19 intraday rally and its drivers. The narrative remains focused on observable price actions and stated causal factors (biotech optimism and options activity) without incorporating external information beyond what these articles report."
+    ]
+  },
+  "10k": {
+    "BMRN": null
+  },
+  "10q": {
+    "BMRN": null
+  },
+  "history_price": {
+    "BMRN": [
+      {
+        "date": "2025-10-19",
+        "price": 53.290000915527344
+      },
+      {
+        "date": "2025-10-20",
+        "price": 53.06999969482422
+      },
+      {
+        "date": "2025-10-21",
+        "price": 53.810001373291016
+      },
+      {
+        "date": "2025-10-22",
+        "price": 53.369998931884766
+      },
+      {
+        "date": "2025-10-23",
+        "price": 54.54999923706055
+      },
+      {
+        "date": "2025-10-24",
+        "price": 54.47999954223633
+      },
+      {
+        "date": "2025-10-25",
+        "price": 54.47999954223633
+      },
+      {
+        "date": "2025-10-26",
+        "price": 54.47999954223633
+      },
+      {
+        "date": "2025-10-27",
+        "price": 52.66999816894531
+      },
+      {
+        "date": "2025-10-28",
+        "price": 53.4900016784668
+      },
+      {
+        "date": "2025-10-29",
+        "price": 51.86000061035156
+      },
+      {
+        "date": "2025-10-30",
+        "price": 51.90999984741211
+      },
+      {
+        "date": "2025-10-31",
+        "price": 53.56999969482422
+      },
+      {
+        "date": "2025-11-01",
+        "price": 53.56999969482422
+      },
+      {
+        "date": "2025-11-02",
+        "price": 53.56999969482422
+      },
+      {
+        "date": "2025-11-03",
+        "price": 52.849998474121094
+      },
+      {
+        "date": "2025-11-04",
+        "price": 52.52000045776367
+      },
+      {
+        "date": "2025-11-05",
+        "price": 52.79999923706055
+      },
+      {
+        "date": "2025-11-06",
+        "price": 51.84000015258789
+      },
+      {
+        "date": "2025-11-07",
+        "price": 51.459999084472656
+      },
+      {
+        "date": "2025-11-08",
+        "price": 51.459999084472656
+      },
+      {
+        "date": "2025-11-09",
+        "price": 51.459999084472656
+      },
+      {
+        "date": "2025-11-10",
+        "price": 52.66999816894531
+      },
+      {
+        "date": "2025-11-11",
+        "price": 54.93000030517578
+      },
+      {
+        "date": "2025-11-12",
+        "price": 55.31999969482422
+      },
+      {
+        "date": "2025-11-13",
+        "price": 54.220001220703125
+      },
+      {
+        "date": "2025-11-14",
+        "price": 54.72999954223633
+      },
+      {
+        "date": "2025-11-15",
+        "price": 54.72999954223633
+      },
+      {
+        "date": "2025-11-16",
+        "price": 54.72999954223633
+      },
+      {
+        "date": "2025-11-17",
+        "price": 54.459999084472656
+      },
+      {
+        "date": "2025-11-18",
+        "price": 54.15999984741211
+      },
+      {
+        "date": "2025-11-19",
+        "price": 52.560001373291016
+      },
+      {
+        "date": "2025-11-20",
+        "price": 52.47999954223633
+      },
+      {
+        "date": "2025-11-21",
+        "price": 54.689998626708984
+      },
+      {
+        "date": "2025-11-22",
+        "price": 54.689998626708984
+      },
+      {
+        "date": "2025-11-23",
+        "price": 54.689998626708984
+      },
+      {
+        "date": "2025-11-24",
+        "price": 55.5
+      },
+      {
+        "date": "2025-11-25",
+        "price": 56.290000915527344
+      },
+      {
+        "date": "2025-11-26",
+        "price": 55.52000045776367
+      },
+      {
+        "date": "2025-11-27",
+        "price": 55.52000045776367
+      },
+      {
+        "date": "2025-11-28",
+        "price": 55.93000030517578
+      },
+      {
+        "date": "2025-11-29",
+        "price": 55.93000030517578
+      },
+      {
+        "date": "2025-11-30",
+        "price": 55.93000030517578
+      },
+      {
+        "date": "2025-12-01",
+        "price": 55.029998779296875
+      },
+      {
+        "date": "2025-12-02",
+        "price": 53.88999938964844
+      },
+      {
+        "date": "2025-12-03",
+        "price": 54.310001373291016
+      },
+      {
+        "date": "2025-12-04",
+        "price": 53.81999969482422
+      },
+      {
+        "date": "2025-12-05",
+        "price": 53.400001525878906
+      },
+      {
+        "date": "2025-12-06",
+        "price": 53.400001525878906
+      },
+      {
+        "date": "2025-12-07",
+        "price": 53.400001525878906
+      },
+      {
+        "date": "2025-12-08",
+        "price": 53.29999923706055
+      },
+      {
+        "date": "2025-12-09",
+        "price": 53.7400016784668
+      },
+      {
+        "date": "2025-12-10",
+        "price": 53.70000076293945
+      },
+      {
+        "date": "2025-12-11",
+        "price": 52.9900016784668
+      },
+      {
+        "date": "2025-12-12",
+        "price": 53.310001373291016
+      },
+      {
+        "date": "2025-12-13",
+        "price": 53.310001373291016
+      },
+      {
+        "date": "2025-12-14",
+        "price": 53.310001373291016
+      },
+      {
+        "date": "2025-12-15",
+        "price": 52.119998931884766
+      },
+      {
+        "date": "2025-12-16",
+        "price": 51.77000045776367
+      },
+      {
+        "date": "2025-12-17",
+        "price": 51.79999923706055
+      }
+    ]
+  }
+}

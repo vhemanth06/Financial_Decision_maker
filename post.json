@@ -1,0 +1,267 @@
+{
+  "date": "2026-04-18",
+  "price": {
+    "TSLA": 400.6199951171875
+  },
+  "symbol": {
+    "TSLA": "TSLA"
+  },
+  "momentum": {
+    "TSLA": "bullish"
+  },
+  "news": {
+    "TSLA": [
+      "The collection of TSLA-related coverage from 2026-04-18 centers on Tesla expanding its robotaxi ambitions in the United States, alongside a mixed-but generally neutral market backdrop and comparative signals about its US leadership versus global peers. Across sources, the threads are: concrete operational progress in robotaxi deployment; emphasis on Tesla\u2019s current competitive position in the US; cautious or mixed investor sentiment about the stock; and broader tech/AI-market dynamics providing context for how investors view Tesla within a tech-heavy landscape. Operational developments and corporate positioning - Tesla\u2019s robotaxi expansion to Dallas and Houston represents the latest phase of its nascent robotaxi program. Reuters confirms the rollout to these two cities, noting Tesla announced via its official X account with videos showing Model Y vehicles operating without a driver or monitor in the front seat. The company published boundaries for the service, but did not disclose fleet size or pricing, underscoring a measured, iterative expansion rather than an immediate nationwide rollout. This development situates Tesla\u2019s robotaxi push as ongoing and incremental, extending the service beyond the prior Austin launch and the San Francisco Bay Area. (Reuters) - Investor's Business Daily similarly highlights the Dallas and Houston expansion as a continued deployment of Tesla\u2019s robotaxi service, framing it as a notable second wave of city introductions since the earlier launches, which reinforces the ongoing nature of Tesla\u2019s nascent autonomous ride-hailing effort. (Investor's Business Daily) Competitiveness and market positioning - Tesla\u2019s US leadership in the EV space is underscored by Elon Musk\u2019s post in response to a chart comparing US EV sales. The piece cites Tesla selling a substantial number of EVs in the US, placing it well ahead of competitors within the domestic market. The article notes that, while Tesla dominates the US, the global picture differs, with BYD described as three times larger on a global scale, highlighting a divergence between domestic strength and international competition. (Benzinga) - In line with the above, another perspective from Motley Fool notes that while price targets are being adjusted lower in some circles, a broad view among analysts remains that there is still substantial upside to the stock. The framing here is more about sentiment and expectations than current fundamentals, but it reinforces that analysts see Tesla as continuing to hold a leading position in the US while facing a more mixed global competitive landscape. (Motley Fool) Broader market context and investor sentiment - The market environment surrounding AI and tech equities on that date is described as having froth in some AI-related trades, even though the underlying fundamentals in AI sectors remain solid. This context matters for Tesla insofar as it is increasingly viewed as a tech-forward, AI-leaning company, including in its robotaxi initiatives, even as investors calibrate valuations in a broader AI cycle. (Yahoo Finance) - Additional tech-ecosystem context is provided by coverage of high-profile Musk-affiliated ventures beyond Tesla. SpaceX\u2019s IPO chatter is highlighted as a potential blockbuster, while another piece discusses a US political and regulatory scrutiny angle tied to a Musk-affiliated crypto project. Taken together, these items reflect a broader, mixed-atmosphere backdrop around Musk-led ventures, which can color investor sentiment toward Tesla within a wider tech arena. (Motley Fool; Benzinga) - The market narrative around Tesla also includes a forward-looking note from a market-coverage piece that signals investors are watching ahead of earnings, with specific attention to how market dynamics could interact with Tesla\u2019s ongoing robotaxi and EV positioning. (Investor's Business Daily) Overall market sentiment - Across these articles, the sentiment is broadly neutral, with pockets of optimism focused on Tesla\u2019s ongoing robotaxi expansion in the US and its apparent lead in the domestic EV market. At the same time, the coverage emphasizes international competition (BYD\u2019s global scale) and a cautious market environment for tech/AI equities, including commentators noting froth in AI spaces even as fundamentals remain solid. The mix suggests investors view Tesla as a continuing US strength with an evolving, still-unproven robotaxi program, while remaining mindful of broader tech-market dynamics and the competitive landscape. This neutral-to-mildly-positive tonal balance is consistent across Yahoo Finance, Motley Fool, Benzinga, Investor's Business Daily, and Reuters pieces cited here, with the overall takeaway being cautious optimism anchored by concrete operational progress in robotaxi deployment and a clear US leadership narrative, framed by broader market context and looming earnings."
+    ]
+  },
+  "10k": {
+    "TSLA": null
+  },
+  "10q": {
+    "TSLA": null
+  },
+  "history_price": {
+    "TSLA": [
+      {
+        "date": "2026-02-17",
+        "price": 410.6300048828125
+      },
+      {
+        "date": "2026-02-18",
+        "price": 411.32000732421875
+      },
+      {
+        "date": "2026-02-19",
+        "price": 411.7099914550781
+      },
+      {
+        "date": "2026-02-20",
+        "price": 411.82000732421875
+      },
+      {
+        "date": "2026-02-21",
+        "price": 411.82000732421875
+      },
+      {
+        "date": "2026-02-22",
+        "price": 411.82000732421875
+      },
+      {
+        "date": "2026-02-23",
+        "price": 399.8299865722656
+      },
+      {
+        "date": "2026-02-24",
+        "price": 409.3800048828125
+      },
+      {
+        "date": "2026-02-25",
+        "price": 417.3999938964844
+      },
+      {
+        "date": "2026-02-26",
+        "price": 408.5799865722656
+      },
+      {
+        "date": "2026-02-27",
+        "price": 402.510009765625
+      },
+      {
+        "date": "2026-02-28",
+        "price": 402.510009765625
+      },
+      {
+        "date": "2026-03-01",
+        "price": 402.510009765625
+      },
+      {
+        "date": "2026-03-02",
+        "price": 403.32000732421875
+      },
+      {
+        "date": "2026-03-03",
+        "price": 392.42999267578125
+      },
+      {
+        "date": "2026-03-04",
+        "price": 405.94000244140625
+      },
+      {
+        "date": "2026-03-05",
+        "price": 405.54998779296875
+      },
+      {
+        "date": "2026-03-06",
+        "price": 396.7300109863281
+      },
+      {
+        "date": "2026-03-07",
+        "price": 396.7300109863281
+      },
+      {
+        "date": "2026-03-08",
+        "price": 396.7300109863281
+      },
+      {
+        "date": "2026-03-09",
+        "price": 398.67999267578125
+      },
+      {
+        "date": "2026-03-10",
+        "price": 399.2349853515625
+      },
+      {
+        "date": "2026-03-11",
+        "price": 407.82000732421875
+      },
+      {
+        "date": "2026-03-12",
+        "price": 395.010009765625
+      },
+      {
+        "date": "2026-03-13",
+        "price": 391.20001220703125
+      },
+      {
+        "date": "2026-03-14",
+        "price": 391.20001220703125
+      },
+      {
+        "date": "2026-03-15",
+        "price": 391.20001220703125
+      },
+      {
+        "date": "2026-03-16",
+        "price": 395.55999755859375
+      },
+      {
+        "date": "2026-03-17",
+        "price": 399.2699890136719
+      },
+      {
+        "date": "2026-03-18",
+        "price": 392.7799987792969
+      },
+      {
+        "date": "2026-03-19",
+        "price": 380.29998779296875
+      },
+      {
+        "date": "2026-03-20",
+        "price": 367.9599914550781
+      },
+      {
+        "date": "2026-03-21",
+        "price": 367.9599914550781
+      },
+      {
+        "date": "2026-03-22",
+        "price": 367.9599914550781
+      },
+      {
+        "date": "2026-03-23",
+        "price": 380.8500061035156
+      },
+      {
+        "date": "2026-03-24",
+        "price": 383.0299987792969
+      },
+      {
+        "date": "2026-03-25",
+        "price": 385.95001220703125
+      },
+      {
+        "date": "2026-03-26",
+        "price": 372.1099853515625
+      },
+      {
+        "date": "2026-03-27",
+        "price": 361.8299865722656
+      },
+      {
+        "date": "2026-03-28",
+        "price": 361.8299865722656
+      },
+      {
+        "date": "2026-03-29",
+        "price": 361.8299865722656
+      },
+      {
+        "date": "2026-03-30",
+        "price": 355.2799987792969
+      },
+      {
+        "date": "2026-03-31",
+        "price": 371.75
+      },
+      {
+        "date": "2026-04-01",
+        "price": 381.260009765625
+      },
+      {
+        "date": "2026-04-02",
+        "price": 360.5899963378906
+      },
+      {
+        "date": "2026-04-03",
+        "price": 360.5899963378906
+      },
+      {
+        "date": "2026-04-04",
+        "price": 360.5899963378906
+      },
+      {
+        "date": "2026-04-05",
+        "price": 360.5899963378906
+      },
+      {
+        "date": "2026-04-06",
+        "price": 352.82000732421875
+      },
+      {
+        "date": "2026-04-07",
+        "price": 346.6499938964844
+      },
+      {
+        "date": "2026-04-08",
+        "price": 343.25
+      },
+      {
+        "date": "2026-04-09",
+        "price": 345.6199951171875
+      },
+      {
+        "date": "2026-04-10",
+        "price": 348.95001220703125
+      },
+      {
+        "date": "2026-04-11",
+        "price": 348.95001220703125
+      },
+      {
+        "date": "2026-04-12",
+        "price": 348.95001220703125
+      },
+      {
+        "date": "2026-04-13",
+        "price": 352.4200134277344
+      },
+      {
+        "date": "2026-04-14",
+        "price": 364.20001220703125
+      },
+      {
+        "date": "2026-04-15",
+        "price": 391.95001220703125
+      },
+      {
+        "date": "2026-04-16",
+        "price": 388.8999938964844
+      },
+      {
+        "date": "2026-04-17",
+        "price": 400.6199951171875
+      }
+    ]
+  }
+}

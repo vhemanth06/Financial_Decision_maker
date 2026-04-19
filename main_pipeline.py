@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import random
 from pathlib import Path
@@ -10,7 +11,6 @@ import numpy as np
 import pandas as pd
 import torch
 import yaml
-from dotenv import load_dotenv
 
 from src.data.clean_data import build_consolidated_dataframe
 from src.data.fetch_assets import fetch_assets
@@ -19,15 +19,13 @@ from src.evaluation.metrics import evaluate_trading_performance
 from src.features.labels import build_labeled_dataset
 from src.features.text_encoder import build_finbert_pca_embeddings
 from src.models.quant_xgboost import (
+    actions_from_probabilities,
     build_feature_matrix,
-    predict_actions_with_threshold,
     train_and_save_xgboost,
     train_xgb_classifier,
 )
 
 LOGGER = logging.getLogger(__name__)
-
-load_dotenv()
 
 
 def configure_logging() -> None:
@@ -99,8 +97,21 @@ def run_cpcv_evaluation(config: dict[str, Any]) -> dict[str, float]:
     valid_frame = labeled_frame.loc[valid_mask].reset_index(drop=True)
     forward_returns = pd.to_numeric(valid_frame["future_return"], errors="coerce").fillna(0.0).to_numpy()
 
+    threshold_grid = [
+        float(value)
+        for value in xgb_cfg.get("confidence_threshold_grid", [])
+    ]
+    threshold_grid.append(float(xgb_cfg["confidence_threshold"]))
+    threshold_grid = sorted({threshold for threshold in threshold_grid if 0.0 <= threshold <= 1.0})
+    if not threshold_grid:
+        threshold_grid = [float(xgb_cfg["confidence_threshold"])]
+
+    directional_edge_threshold = float(xgb_cfg.get("directional_edge_threshold", 0.0))
+    hold_probability_cap = float(xgb_cfg.get("hold_probability_cap", 1.0))
+
     splitter = build_cpcv_from_config(config)
-    sharpe_scores: list[float] = []
+    sharpe_scores_by_threshold: dict[float, list[float]] = {threshold: [] for threshold in threshold_grid}
+    hold_share_by_threshold: dict[float, list[float]] = {threshold: [] for threshold in threshold_grid}
 
     for split_id, (train_idx, test_idx) in enumerate(splitter.split(all_features), start=1):
         split_seed = int(config["seed"]["xgboost"]) + split_id
@@ -111,35 +122,102 @@ def run_cpcv_evaluation(config: dict[str, Any]) -> dict[str, float]:
             seed=split_seed,
         )
 
-        actions = predict_actions_with_threshold(
-            model=model,
-            features=all_features[test_idx],
-            confidence_threshold=float(xgb_cfg["confidence_threshold"]),
-        )
+        split_probabilities = model.predict_proba(all_features[test_idx])
+        for threshold in threshold_grid:
+            actions, _ = actions_from_probabilities(
+                probabilities=split_probabilities,
+                confidence_threshold=float(threshold),
+                directional_edge_threshold=directional_edge_threshold,
+                hold_probability_cap=hold_probability_cap,
+            )
 
-        metrics = evaluate_trading_performance(
-            actions=actions,
-            market_returns=forward_returns[test_idx],
-            transaction_fee_bps=float(evaluation_cfg["transaction_fee_bps"]),
-            annualization_factor=int(evaluation_cfg["annualization_factor"]),
-        )
+            metrics = evaluate_trading_performance(
+                actions=actions,
+                market_returns=forward_returns[test_idx],
+                transaction_fee_bps=float(evaluation_cfg["transaction_fee_bps"]),
+                annualization_factor=int(evaluation_cfg["annualization_factor"]),
+            )
 
-        sharpe = float(metrics["sharpe_ratio"])
-        sharpe_scores.append(sharpe)
-        LOGGER.info("CPCV split %d Sharpe: %.6f", split_id, sharpe)
+            sharpe_scores_by_threshold[threshold].append(float(metrics["sharpe_ratio"]))
+            hold_share_by_threshold[threshold].append(float(np.mean(actions == 0)) if len(actions) else 0.0)
 
-    if not sharpe_scores:
+    non_empty_thresholds = {
+        threshold: values
+        for threshold, values in sharpe_scores_by_threshold.items()
+        if values
+    }
+    if not non_empty_thresholds:
         return {
             "mean_sharpe": 0.0,
             "std_sharpe": 0.0,
             "num_splits": 0.0,
+            "best_confidence_threshold": float(xgb_cfg["confidence_threshold"]),
+            "best_mean_sharpe": 0.0,
+            "mean_hold_share": 0.0,
         }
 
-    return {
-        "mean_sharpe": float(np.mean(sharpe_scores)),
-        "std_sharpe": float(np.std(sharpe_scores, ddof=1)) if len(sharpe_scores) > 1 else 0.0,
-        "num_splits": float(len(sharpe_scores)),
+    mean_sharpe_by_threshold = {
+        threshold: float(np.mean(values))
+        for threshold, values in non_empty_thresholds.items()
     }
+    best_threshold = max(
+        mean_sharpe_by_threshold,
+        key=lambda threshold: (mean_sharpe_by_threshold[threshold], -threshold),
+    )
+
+    for threshold in threshold_grid:
+        threshold_sharpes = sharpe_scores_by_threshold.get(threshold, [])
+        threshold_holds = hold_share_by_threshold.get(threshold, [])
+        if not threshold_sharpes:
+            continue
+        LOGGER.info(
+            "CPCV threshold %.3f | mean_sharpe=%.6f mean_hold_share=%.4f splits=%d",
+            threshold,
+            float(np.mean(threshold_sharpes)),
+            float(np.mean(threshold_holds)) if threshold_holds else 0.0,
+            len(threshold_sharpes),
+        )
+
+    selected_sharpes = sharpe_scores_by_threshold[best_threshold]
+    selected_holds = hold_share_by_threshold[best_threshold]
+    return {
+        "mean_sharpe": float(np.mean(selected_sharpes)),
+        "std_sharpe": float(np.std(selected_sharpes, ddof=1)) if len(selected_sharpes) > 1 else 0.0,
+        "num_splits": float(len(selected_sharpes)),
+        "best_confidence_threshold": float(best_threshold),
+        "best_mean_sharpe": float(mean_sharpe_by_threshold[best_threshold]),
+        "mean_hold_share": float(np.mean(selected_holds)) if selected_holds else 0.0,
+    }
+
+
+def save_xgb_policy(config: dict[str, Any], cpcv_summary: dict[str, float]) -> None:
+    """Persist calibrated inference policy values from CPCV evaluation.
+
+    Args:
+        config: Full project configuration dictionary.
+        cpcv_summary: CPCV summary dictionary returned by run_cpcv_evaluation.
+    """
+    paths_cfg = config["paths"]
+    xgb_cfg = config["xgboost"]
+
+    policy_path = Path(paths_cfg.get("xgb_policy", "data/processed/xgb_policy.json"))
+    policy_path.parent.mkdir(parents=True, exist_ok=True)
+
+    policy_payload = {
+        "confidence_threshold": float(
+            cpcv_summary.get("best_confidence_threshold", xgb_cfg["confidence_threshold"])
+        ),
+        "directional_edge_threshold": float(xgb_cfg.get("directional_edge_threshold", 0.0)),
+        "hold_probability_cap": float(xgb_cfg.get("hold_probability_cap", 1.0)),
+        "sharpe_ratio": float(cpcv_summary.get("mean_sharpe", 0.0)),
+        "sharpe_std": float(cpcv_summary.get("std_sharpe", 0.0)),
+        "mean_hold_share": float(cpcv_summary.get("mean_hold_share", 0.0)),
+        "objective": float(cpcv_summary.get("best_mean_sharpe", 0.0)),
+    }
+
+    with policy_path.open("w", encoding="utf-8") as file_obj:
+        json.dump(policy_payload, file_obj, indent=2)
+    LOGGER.info("Saved XGBoost policy -> %s", policy_path)
 
 
 def run_pipeline(config_path: Path) -> None:
@@ -166,11 +244,19 @@ def run_pipeline(config_path: Path) -> None:
     LOGGER.info("Phase 5 | Running CPCV Sharpe evaluation")
     cpcv_summary = run_cpcv_evaluation(config)
     LOGGER.info(
-        "CPCV summary | mean_sharpe=%.6f std_sharpe=%.6f splits=%d",
+        "CPCV summary | mean_sharpe=%.6f std_sharpe=%.6f splits=%d tuned_threshold=%.3f",
         cpcv_summary["mean_sharpe"],
         cpcv_summary["std_sharpe"],
         int(cpcv_summary["num_splits"]),
+        cpcv_summary["best_confidence_threshold"],
     )
+
+    config["xgboost"]["confidence_threshold"] = float(cpcv_summary["best_confidence_threshold"])
+    LOGGER.info(
+        "Using tuned confidence threshold %.3f for final training and policy export",
+        config["xgboost"]["confidence_threshold"],
+    )
+    save_xgb_policy(config, cpcv_summary)
 
     LOGGER.info("Phase 4 | Training final XGBoost model on full training set")
     train_and_save_xgboost(config)

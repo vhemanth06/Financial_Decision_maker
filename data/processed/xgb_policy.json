@@ -1,8 +1,9 @@
 {
-  "confidence_threshold": 0.7,
-  "directional_edge_threshold": 0.04,
-  "hold_probability_cap": 0.45,
-  "sharpe_ratio": 0.0,
-  "turnover": 0.0,
-  "objective": 0.0
+  "confidence_threshold": 0.35,
+  "directional_edge_threshold": 0.0,
+  "hold_probability_cap": 1.0,
+  "sharpe_ratio": 0.4767471725960772,
+  "sharpe_std": 0.6474013169147691,
+  "mean_hold_share": 0.8251302083333333,
+  "objective": 0.4767471725960772
 }

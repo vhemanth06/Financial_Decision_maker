@@ -70,7 +70,9 @@ def generate_targets_with_dynamic_threshold(
         lambda series: series.rolling(
             window=rolling_window,
             min_periods=rolling_min_periods,
-        ).std()
+        )
+        .std()
+        .shift(1)
     )
 
     fallback_volatility = float(labeled["future_return"].std(skipna=True))
@@ -81,9 +83,11 @@ def generate_targets_with_dynamic_threshold(
     labeled["tau_buy"] = rolling_volatility * vol_multiplier_buy
     labeled["tau_sell"] = rolling_volatility * vol_multiplier_sell
 
-    labeled[target_column] = 0
-    labeled.loc[labeled["future_return"] > labeled["tau_buy"], target_column] = 1
-    labeled.loc[labeled["future_return"] < -labeled["tau_sell"], target_column] = -1
+    valid_future_mask = labeled["future_return"].notna()
+    labeled[target_column] = np.nan
+    labeled.loc[valid_future_mask, target_column] = 0
+    labeled.loc[valid_future_mask & (labeled["future_return"] > labeled["tau_buy"]), target_column] = 1
+    labeled.loc[valid_future_mask & (labeled["future_return"] < -labeled["tau_sell"]), target_column] = -1
 
     return labeled
 

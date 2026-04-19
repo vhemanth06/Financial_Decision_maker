@@ -11,9 +11,8 @@ Architecture:
 ## 1. Setup
 
 ```bash
-cd clef2026_trading_agent
-python -m venv .venv
-source .venv/bin/activate
+cd Financial_Decision_maker
+conda activate nlp
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
@@ -26,10 +25,8 @@ If the CLEF dataset is private, set your Hugging Face token first:
 export HF_TOKEN=your_huggingface_token
 ```
 
-You can also place `HF_TOKEN=...` in a local `.env` file at the repo root.
-
 ```bash
-cd clef2026_trading_agent
+cd Financial_Decision_maker
 python main_pipeline.py --config configs/config.yaml
 ```
 
@@ -39,12 +36,13 @@ What this runs in sequence:
 3. Generate dynamic volatility-threshold labels.
 4. Build FinBERT embeddings and 30D PCA projections.
 5. Run CPCV Sharpe evaluation with transaction costs.
-6. Train and save final XGBoost model.
+6. Calibrate confidence-threshold policy from CPCV.
+7. Train and save final XGBoost model.
 
 ## 3. Start FastAPI Inference Server
 
 ```bash
-cd clef2026_trading_agent
+cd Financial_Decision_maker
 CLEF_CONFIG_PATH=configs/config.yaml uvicorn src.api.main:app --host 0.0.0.0 --port 8000
 ```
 
@@ -52,7 +50,41 @@ CLEF_CONFIG_PATH=configs/config.yaml uvicorn src.api.main:app --host 0.0.0.0 --p
 
 ### POST `/predict`
 
-Example request:
+Example request (nested per-asset format):
+
+```json
+{
+  "date": "2024-10-10",
+  "price": {
+    "BTC": 64500.0
+  },
+  "symbol": {
+    "BTC": "BTC"
+  },
+  "momentum": {
+    "BTC": "bullish"
+  },
+  "news": {
+    "BTC": [
+      "Bitcoin rises as ETF inflows continue."
+    ]
+  },
+  "10k": {
+    "BTC": null
+  },
+  "10q": {
+    "BTC": null
+  },
+  "history_price": {
+    "BTC": [
+      {"date": "2024-10-08", "price": 63100.0},
+      {"date": "2024-10-09", "price": 63850.0}
+    ]
+  }
+}
+```
+
+Legacy flat payloads are still accepted for backward compatibility:
 
 ```json
 {
@@ -85,6 +117,8 @@ Circuit-breaker behavior:
   - XGBoost confidence score
   - Momentum signal
   - Lightweight keyword balance from the day's text context
+- API-side rolling price history is used to compute RSI/MA-ratio/volatility features
+  so live inference better matches training feature construction.
 - Output is always hard-capped to 50 words.
 - This removes all lightweight LLM runtime dependencies from the inference path.
 
@@ -124,4 +158,4 @@ uvicorn src.api.main:app --host 0.0.0.0 --port $PORT
 
 - Render requires binding to `$PORT`; do not hardcode `8000` in start command.
 - Free tier services sleep when idle and take time to wake up.
-- Ensure model artifacts referenced by `configs/config.yaml` are present in the repo at deploy time, especially `data/embeddings/finbert_pca_model.pkl` and `data/processed/xgb_model.json`.
+- Ensure model artifacts referenced by `configs/config.yaml` are present in the repo at deploy time, especially `data/embeddings/finbert_pca_model.pkl`, `data/processed/xgb_model.json`, and `data/processed/xgb_policy.json`.

@@ -61,6 +61,32 @@ def _decode_classes(class_ids: np.ndarray) -> np.ndarray:
     return np.array([CLASS_TO_LABEL[int(class_id)] for class_id in class_ids], dtype=np.int8)
 
 
+def _compute_balanced_sample_weights(targets_encoded: np.ndarray) -> np.ndarray:
+    """Compute inverse-frequency class weights for multiclass training.
+
+    Args:
+        targets_encoded: Encoded target array with class IDs.
+
+    Returns:
+        Per-sample weight vector.
+    """
+    if len(targets_encoded) == 0:
+        return np.array([], dtype=np.float32)
+
+    class_ids, class_counts = np.unique(targets_encoded, return_counts=True)
+    if len(class_ids) <= 1:
+        return np.ones(len(targets_encoded), dtype=np.float32)
+
+    total = float(np.sum(class_counts))
+    class_count = float(len(class_ids))
+    class_to_weight = {
+        int(class_id): total / (class_count * float(count))
+        for class_id, count in zip(class_ids, class_counts)
+        if count > 0
+    }
+    return np.array([class_to_weight[int(class_id)] for class_id in targets_encoded], dtype=np.float32)
+
+
 def _calculate_rsi(series: pd.Series, window: int = 14) -> pd.Series:
     """Calculate RSI."""
     delta = series.diff()
@@ -80,6 +106,51 @@ def _calculate_ma_ratio(series: pd.Series, short_window: int = 10, long_window: 
 def _calculate_rolling_vol(series: pd.Series, window: int = 20) -> pd.Series:
     """Calculate rolling volatility of returns."""
     return series.pct_change().rolling(window=window).std()
+
+
+def actions_from_probabilities(
+    probabilities: np.ndarray,
+    confidence_threshold: float,
+    directional_edge_threshold: float = 0.0,
+    hold_probability_cap: float = 1.0,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Convert class probabilities into {-1,0,1} actions with policy guards.
+
+    Args:
+        probabilities: Predicted class probabilities with shape (n_samples, 3).
+        confidence_threshold: Minimum max class probability to allow directional action.
+        directional_edge_threshold: Minimum absolute edge between BUY and SELL probabilities.
+        hold_probability_cap: If HOLD probability exceeds this cap, action is forced to HOLD.
+
+    Returns:
+        Tuple of (actions, best_probabilities).
+    """
+    if probabilities.ndim != 2:
+        raise ValueError("probabilities must be a 2D array")
+    if probabilities.shape[1] != len(LABEL_TO_CLASS):
+        raise ValueError(
+            "probabilities must have one column per class "
+            f"({len(LABEL_TO_CLASS)}), got {probabilities.shape[1]}"
+        )
+
+    best_class_ids = np.argmax(probabilities, axis=1)
+    best_probabilities = np.max(probabilities, axis=1).astype(np.float32)
+    actions = _decode_classes(best_class_ids)
+
+    low_confidence_mask = best_probabilities < float(confidence_threshold)
+
+    if hold_probability_cap < 1.0:
+        hold_class_id = LABEL_TO_CLASS[0]
+        low_confidence_mask = low_confidence_mask | (probabilities[:, hold_class_id] >= float(hold_probability_cap))
+
+    if directional_edge_threshold > 0.0:
+        buy_class_id = LABEL_TO_CLASS[1]
+        sell_class_id = LABEL_TO_CLASS[-1]
+        directional_edge = np.abs(probabilities[:, buy_class_id] - probabilities[:, sell_class_id])
+        low_confidence_mask = low_confidence_mask | (directional_edge < float(directional_edge_threshold))
+
+    actions[low_confidence_mask] = 0
+    return actions, best_probabilities
 
 
 def build_feature_matrix(
@@ -105,7 +176,8 @@ def build_feature_matrix(
     if len(frame) != reduced_embeddings.shape[0]:
         raise ValueError(
             "Row mismatch between dataframe and embeddings: "
-            f"{len(frame)} != {reduced_embeddings.shape[0]}"
+            f"{len(frame)} != {reduced_embeddings.shape[0]}. "
+            "Regenerate text embeddings to ensure artifacts are aligned with the current labeled dataset."
         )
 
     # --- Start: Technical Indicator Generation ---
@@ -168,7 +240,12 @@ def train_xgb_classifier(
         random_state=seed,
         verbosity=0,
     )
-    model.fit(features, targets_encoded)
+
+    sample_weight = None
+    if bool(xgb_cfg.get("use_class_balancing", True)):
+        sample_weight = _compute_balanced_sample_weights(targets_encoded)
+
+    model.fit(features, targets_encoded, sample_weight=sample_weight)
     return model
 
 
@@ -176,6 +253,8 @@ def predict_actions_and_confidence(
     model: XGBClassifier,
     features: np.ndarray,
     confidence_threshold: float,
+    directional_edge_threshold: float = 0.0,
+    hold_probability_cap: float = 1.0,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Predict actions and expose confidence after HOLD thresholding.
 
@@ -183,24 +262,27 @@ def predict_actions_and_confidence(
         model: Trained XGBoost classifier.
         features: Feature matrix for inference.
         confidence_threshold: Min class probability required to trust a trade.
+        directional_edge_threshold: Min BUY-vs-SELL probability edge for directional actions.
+        hold_probability_cap: Force HOLD when HOLD probability is above this cap.
 
     Returns:
         Tuple of (actions, best_probabilities) where actions are in {-1, 0, 1}.
     """
     probabilities = model.predict_proba(features)
-    best_class_ids = np.argmax(probabilities, axis=1)
-    best_probabilities = np.max(probabilities, axis=1).astype(np.float32)
-
-    actions = _decode_classes(best_class_ids)
-    low_confidence_mask = best_probabilities < confidence_threshold
-    actions[low_confidence_mask] = 0
-    return actions, best_probabilities
+    return actions_from_probabilities(
+        probabilities=probabilities,
+        confidence_threshold=confidence_threshold,
+        directional_edge_threshold=directional_edge_threshold,
+        hold_probability_cap=hold_probability_cap,
+    )
 
 
 def predict_actions_with_threshold(
     model: XGBClassifier,
     features: np.ndarray,
     confidence_threshold: float,
+    directional_edge_threshold: float = 0.0,
+    hold_probability_cap: float = 1.0,
 ) -> np.ndarray:
     """Predict discrete actions with confidence-threshold HOLD override.
 
@@ -208,6 +290,8 @@ def predict_actions_with_threshold(
         model: Trained XGBoost classifier.
         features: Feature matrix for inference.
         confidence_threshold: Min class probability required to trust a trade.
+        directional_edge_threshold: Min BUY-vs-SELL probability edge for directional actions.
+        hold_probability_cap: Force HOLD when HOLD probability is above this cap.
 
     Returns:
         Array of decoded actions in {-1, 0, 1}.
@@ -216,6 +300,8 @@ def predict_actions_with_threshold(
         model=model,
         features=features,
         confidence_threshold=confidence_threshold,
+        directional_edge_threshold=directional_edge_threshold,
+        hold_probability_cap=hold_probability_cap,
     )
     return actions
 
@@ -258,6 +344,8 @@ def train_and_save_xgboost(config: dict[str, Any]) -> XGBClassifier:
         model=model,
         features=train_features,
         confidence_threshold=xgb_cfg["confidence_threshold"],
+        directional_edge_threshold=float(xgb_cfg.get("directional_edge_threshold", 0.0)),
+        hold_probability_cap=float(xgb_cfg.get("hold_probability_cap", 1.0)),
     )
 
     hold_share = float(np.mean(train_actions == 0)) if len(train_actions) else 0.0
