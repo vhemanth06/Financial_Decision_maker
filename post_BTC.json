@@ -1,0 +1,1067 @@
+{
+  "date": "2026-04-18",
+  "price": {
+    "BTC": 75714.23
+  },
+  "symbol": {
+    "BTC": "BTC"
+  },
+  "momentum": {
+    "BTC": "bullish"
+  },
+  "news": {
+    "BTC": [
+      "Across the day on 2026-04-18, the BTC narrative presented a blend of technical, geopolitical, regulatory, and capital-flow developments, with both supportive signals for adoption and counterpoints from enforcement and volatility. Mining and technical dynamics were in focus from Cointelegraph. The report notes that mining difficulty fell, yet is expected to rise in the next adjustment, while the average block time hovered around 9.8 minutes\u2014slightly faster than the 10-minute target. This suggests a short-term tightening in block production following the recent difficulty move, reflecting ongoing adjustments in hash power and the mining ecosystem\u2019s responsiveness to the difficulty schedule. Geopolitics and adoption signals featured prominently as well. Cointelegraph highlighted Iran\u2019s view of Bitcoin as a strategic asset, indicating a broader consideration of BTC in state-level payment infrastructure for oil tolls, though, in current practice, dollar-stablecoins remain the dominant mechanism. This frames BTC as a potential strategic option rather than an immediate substitute in oil-related settlements. In a separate development from CoinDesk, the mining sector showed a notable pooling event: the Parasite mining pool, described with the slogan \u201cplebs eat first,\u201d reportedly found its second BTC block. This underscores ongoing competitive dynamics among mining pools and the continued emergence of distinctive mining entities. On the political economy front, CoinDesk carried commentary from a former UK Prime Minister who characterized the economy as on a \u201cvery negative trajectory\u201d and signaled support for bitcoin. This reflects political actors engaging with BTC as part of broader debates about monetary and economic trajectories. Institutional and asset-management interest also appeared on the positive side. Cointelegraph reported that Spot Bitcoin ETFs attracted nearly $1 billion in weekly inflows, marking their strongest weekly performance in over three months amid improving risk sentiment. This points to renewed institutional flow and a more favorable posture toward BTC-based investment products in a risk-on environment. Regulatory action and enforcement figured prominently as a countervailing force. The SEC charged crypto executive Donald Basile in a case alleging a $16 million fraud tied to claims about an \u201cinsured\u201d Bitcoin Latinum token. This action highlights ongoing regulatory scrutiny and the emphasis on misrepresentation in crypto offerings. Geopolitical-driven price dynamics were also noted by CoinDesk in another report linking Iran\u2019s actions to a decline in BTC price during tensions around Hormuz. The article ties market movement to geopolitical developments, illustrating how macro risk can spill into crypto pricing. Key themes and developments - Mining dynamics and network activity: A lower difficulty with an anticipated next-rise and a sub-10-minute average block time indicate ongoing adjustments in mining performance and hash-rate supply, underscoring the mechanical nature of BTC block production. - Geopolitics and strategic use: Iran\u2019s consideration of BTC as a strategic asset for tolls points to a potential longer-term role for BTC in state-level payment approaches, even as dollar-stablecoins currently dominate. This highlights BTC\u2019s perceived resilience to confiscation and its potential utility in cross-border or sanctioned contexts. - Mining ecosystem evolution: The emergence of the Parasite pool\u2019s second block reflects ongoing diversification and experimentation within mining pools, signaling competitive dynamics and the continued relevance of mining infrastructure as a core BTC backbone. - Political commentary and sentiment: A former UK prime minister voicing concerns about economic trajectory while expressing support for bitcoin illustrates how political voices may frame BTC within macroeconomic discourse, potentially influencing public perception and political conversations about monetary alternatives. - Institutional adoption and risk sentiment: Substantial inflows into spot BTC ETFs signal renewed interest from institutional and risk-tolerant investors, aligned with an improving risk sentiment environment. - Regulatory enforcement: The SEC\u2019s action against Donald Basile underscores ongoing regulatory enforcement and the risk of purity-of-offer claims within crypto products, contributing to a sense of caution around crypto-fraud risk. - Geopolitical risk and price sensitivity: The linkage of market movement to Iran\u2019s geopolitical actions demonstrates how macro events can drive volatility, even as core network fundamentals persist. Overall market sentiment The collection of articles depicts a cautiously optimistic but status-quo-risk environment. Positive signals include renewed institutional inflows into spot BTC ETFs and high-level political and strategic interest in BTC\u2019s role, including discussions from a former prime minister and a state-level consideration of BTC in oil-toll payments. At the same time, regulatory scrutiny and enforcement actions, along with volatility tied to geopolitical developments, introduce headwinds and caution. The mining sector shows normal cyclical behavior with adjustments underway, indicating ongoing technical adaptability. Taken together, sentiment appears as cautiously constructive on adoption and institutional engagement, tempered by regulatory and geopolitical risk factors that can introduce volatility and nuance in the near term. Sources contributing to this picture include Cointelegraph (mining difficulty, Iran\u2019s strategic view, ETF inflows, and enforcement action) and CoinDesk (Parasite mining pool, UK political commentary, and Iran-related price dynamics)."
+    ]
+  },
+  "10k": {
+    "BTC": null
+  },
+  "10q": {
+    "BTC": null
+  },
+  "history_price": {
+    "BTC": [
+      {
+        "date": "2025-08-01",
+        "price": 113343.12
+      },
+      {
+        "date": "2025-08-02",
+        "price": 112784.96
+      },
+      {
+        "date": "2025-08-03",
+        "price": 114126.62
+      },
+      {
+        "date": "2025-08-04",
+        "price": 115176.19
+      },
+      {
+        "date": "2025-08-05",
+        "price": 114191.49
+      },
+      {
+        "date": "2025-08-06",
+        "price": 115054.66
+      },
+      {
+        "date": "2025-08-07",
+        "price": 117499.31
+      },
+      {
+        "date": "2025-08-08",
+        "price": 116929.14
+      },
+      {
+        "date": "2025-08-09",
+        "price": 116469.0
+      },
+      {
+        "date": "2025-08-10",
+        "price": 118980.47
+      },
+      {
+        "date": "2025-08-11",
+        "price": 118808.69
+      },
+      {
+        "date": "2025-08-12",
+        "price": 120266.64
+      },
+      {
+        "date": "2025-08-13",
+        "price": 123109.9
+      },
+      {
+        "date": "2025-08-14",
+        "price": 118094.4
+      },
+      {
+        "date": "2025-08-15",
+        "price": 117335.65
+      },
+      {
+        "date": "2025-08-16",
+        "price": 117385.76
+      },
+      {
+        "date": "2025-08-17",
+        "price": 117444.35
+      },
+      {
+        "date": "2025-08-18",
+        "price": 116540.82
+      },
+      {
+        "date": "2025-08-19",
+        "price": 113000.0
+      },
+      {
+        "date": "2025-08-20",
+        "price": 114647.28
+      },
+      {
+        "date": "2025-08-21",
+        "price": 112356.62
+      },
+      {
+        "date": "2025-08-22",
+        "price": 116924.55
+      },
+      {
+        "date": "2025-08-23",
+        "price": 115500.01
+      },
+      {
+        "date": "2025-08-24",
+        "price": 113400.01
+      },
+      {
+        "date": "2025-08-25",
+        "price": 110393.58
+      },
+      {
+        "date": "2025-08-26",
+        "price": 111761.32
+      },
+      {
+        "date": "2025-08-27",
+        "price": 111486.86
+      },
+      {
+        "date": "2025-08-28",
+        "price": 112585.59
+      },
+      {
+        "date": "2025-08-29",
+        "price": 108401.64
+      },
+      {
+        "date": "2025-08-30",
+        "price": 108569.75
+      },
+      {
+        "date": "2025-08-31",
+        "price": 108432.11
+      },
+      {
+        "date": "2025-09-01",
+        "price": 109061.86
+      },
+      {
+        "date": "2025-09-02",
+        "price": 111276.18
+      },
+      {
+        "date": "2025-09-03",
+        "price": 111960.28
+      },
+      {
+        "date": "2025-09-04",
+        "price": 110609.51
+      },
+      {
+        "date": "2025-09-05",
+        "price": 110576.38
+      },
+      {
+        "date": "2025-09-06",
+        "price": 110129.22
+      },
+      {
+        "date": "2025-09-07",
+        "price": 111489.92
+      },
+      {
+        "date": "2025-09-08",
+        "price": 111951.09
+      },
+      {
+        "date": "2025-09-09",
+        "price": 111584.15
+      },
+      {
+        "date": "2025-09-10",
+        "price": 113996.01
+      },
+      {
+        "date": "2025-09-11",
+        "price": 115410.52
+      },
+      {
+        "date": "2025-09-12",
+        "price": 116186.2
+      },
+      {
+        "date": "2025-09-13",
+        "price": 115968.46
+      },
+      {
+        "date": "2025-09-14",
+        "price": 115555.39
+      },
+      {
+        "date": "2025-09-15",
+        "price": 115259.04
+      },
+      {
+        "date": "2025-09-16",
+        "price": 116860.6
+      },
+      {
+        "date": "2025-09-17",
+        "price": 116571.74
+      },
+      {
+        "date": "2025-09-18",
+        "price": 116906.28
+      },
+      {
+        "date": "2025-09-19",
+        "price": 115623.64
+      },
+      {
+        "date": "2025-09-20",
+        "price": 115814.94
+      },
+      {
+        "date": "2025-09-21",
+        "price": 115459.7
+      },
+      {
+        "date": "2025-09-22",
+        "price": 112805.24
+      },
+      {
+        "date": "2025-09-23",
+        "price": 111917.91
+      },
+      {
+        "date": "2025-09-24",
+        "price": 113223.27
+      },
+      {
+        "date": "2025-09-25",
+        "price": 108906.81
+      },
+      {
+        "date": "2025-09-26",
+        "price": 109725.04
+      },
+      {
+        "date": "2025-09-27",
+        "price": 109558.06
+      },
+      {
+        "date": "2025-09-28",
+        "price": 112083.01
+      },
+      {
+        "date": "2025-09-29",
+        "price": 114332.5
+      },
+      {
+        "date": "2025-09-30",
+        "price": 114149.05
+      },
+      {
+        "date": "2025-10-01",
+        "price": 118482.95
+      },
+      {
+        "date": "2025-10-02",
+        "price": 120559.88
+      },
+      {
+        "date": "2025-10-03",
+        "price": 122288.94
+      },
+      {
+        "date": "2025-10-04",
+        "price": 122375.0
+      },
+      {
+        "date": "2025-10-05",
+        "price": 123294.13
+      },
+      {
+        "date": "2025-10-06",
+        "price": 124797.86
+      },
+      {
+        "date": "2025-10-07",
+        "price": 121329.51
+      },
+      {
+        "date": "2025-10-08",
+        "price": 123455.27
+      },
+      {
+        "date": "2025-10-09",
+        "price": 121658.66
+      },
+      {
+        "date": "2025-10-10",
+        "price": 113189.88
+      },
+      {
+        "date": "2025-10-11",
+        "price": 110519.44
+      },
+      {
+        "date": "2025-10-12",
+        "price": 115252.21
+      },
+      {
+        "date": "2025-10-13",
+        "price": 115290.6
+      },
+      {
+        "date": "2025-10-14",
+        "price": 113055.15
+      },
+      {
+        "date": "2025-10-15",
+        "price": 111188.73
+      },
+      {
+        "date": "2025-10-16",
+        "price": 107998.02
+      },
+      {
+        "date": "2025-10-17",
+        "price": 106721.75
+      },
+      {
+        "date": "2025-10-18",
+        "price": 106959.99
+      },
+      {
+        "date": "2025-10-19",
+        "price": 108455.55
+      },
+      {
+        "date": "2025-10-20",
+        "price": 110519.56
+      },
+      {
+        "date": "2025-10-21",
+        "price": 108594.71
+      },
+      {
+        "date": "2025-10-22",
+        "price": 107586.53
+      },
+      {
+        "date": "2025-10-23",
+        "price": 110070.09
+      },
+      {
+        "date": "2025-10-24",
+        "price": 111030.0
+      },
+      {
+        "date": "2025-10-25",
+        "price": 111683.45
+      },
+      {
+        "date": "2025-10-26",
+        "price": 114687.19
+      },
+      {
+        "date": "2025-10-27",
+        "price": 114210.0
+      },
+      {
+        "date": "2025-10-28",
+        "price": 112858.98
+      },
+      {
+        "date": "2025-10-29",
+        "price": 110145.05
+      },
+      {
+        "date": "2025-10-30",
+        "price": 108301.73
+      },
+      {
+        "date": "2025-10-31",
+        "price": 109740.02
+      },
+      {
+        "date": "2025-11-01",
+        "price": 110000.17
+      },
+      {
+        "date": "2025-11-02",
+        "price": 110675.77
+      },
+      {
+        "date": "2025-11-03",
+        "price": 106350.88
+      },
+      {
+        "date": "2025-11-04",
+        "price": 101752.18
+      },
+      {
+        "date": "2025-11-05",
+        "price": 104097.61
+      },
+      {
+        "date": "2025-11-06",
+        "price": 101449.54
+      },
+      {
+        "date": "2025-11-07",
+        "price": 103700.0
+      },
+      {
+        "date": "2025-11-08",
+        "price": 102473.99
+      },
+      {
+        "date": "2025-11-09",
+        "price": 104904.38
+      },
+      {
+        "date": "2025-11-10",
+        "price": 106194.85
+      },
+      {
+        "date": "2025-11-11",
+        "price": 103208.79
+      },
+      {
+        "date": "2025-11-12",
+        "price": 101783.24
+      },
+      {
+        "date": "2025-11-13",
+        "price": 99943.75
+      },
+      {
+        "date": "2025-11-14",
+        "price": 94740.41
+      },
+      {
+        "date": "2025-11-15",
+        "price": 95519.21
+      },
+      {
+        "date": "2025-11-16",
+        "price": 94299.99
+      },
+      {
+        "date": "2025-11-17",
+        "price": 92271.38
+      },
+      {
+        "date": "2025-11-18",
+        "price": 92944.17
+      },
+      {
+        "date": "2025-11-19",
+        "price": 91240.41
+      },
+      {
+        "date": "2025-11-20",
+        "price": 87062.01
+      },
+      {
+        "date": "2025-11-21",
+        "price": 85003.21
+      },
+      {
+        "date": "2025-11-22",
+        "price": 84670.71
+      },
+      {
+        "date": "2025-11-23",
+        "price": 86982.78
+      },
+      {
+        "date": "2025-11-24",
+        "price": 88512.08
+      },
+      {
+        "date": "2025-11-25",
+        "price": 87573.26
+      },
+      {
+        "date": "2025-11-26",
+        "price": 90577.72
+      },
+      {
+        "date": "2025-11-27",
+        "price": 91452.2
+      },
+      {
+        "date": "2025-11-28",
+        "price": 90921.52
+      },
+      {
+        "date": "2025-11-29",
+        "price": 90878.9
+      },
+      {
+        "date": "2025-11-30",
+        "price": 90589.87
+      },
+      {
+        "date": "2025-12-01",
+        "price": 86249.78
+      },
+      {
+        "date": "2025-12-02",
+        "price": 91550.01
+      },
+      {
+        "date": "2025-12-03",
+        "price": 93747.41
+      },
+      {
+        "date": "2025-12-04",
+        "price": 92125.79
+      },
+      {
+        "date": "2025-12-05",
+        "price": 89094.11
+      },
+      {
+        "date": "2025-12-06",
+        "price": 89422.79
+      },
+      {
+        "date": "2025-12-07",
+        "price": 90419.25
+      },
+      {
+        "date": "2025-12-08",
+        "price": 90817.84
+      },
+      {
+        "date": "2025-12-09",
+        "price": 92974.58
+      },
+      {
+        "date": "2025-12-10",
+        "price": 91946.89
+      },
+      {
+        "date": "2025-12-11",
+        "price": 92593.75
+      },
+      {
+        "date": "2025-12-12",
+        "price": 90294.75
+      },
+      {
+        "date": "2025-12-13",
+        "price": 90298.72
+      },
+      {
+        "date": "2025-12-14",
+        "price": 88443.15
+      },
+      {
+        "date": "2025-12-15",
+        "price": 86496.5
+      },
+      {
+        "date": "2025-12-16",
+        "price": 87870.59
+      },
+      {
+        "date": "2025-12-17",
+        "price": 86283.23
+      },
+      {
+        "date": "2025-12-18",
+        "price": 85300.0
+      },
+      {
+        "date": "2025-12-19",
+        "price": 88254.74
+      },
+      {
+        "date": "2025-12-20",
+        "price": 88394.5
+      },
+      {
+        "date": "2025-12-21",
+        "price": 88676.99
+      },
+      {
+        "date": "2025-12-22",
+        "price": 88601.68
+      },
+      {
+        "date": "2025-12-23",
+        "price": 87328.71
+      },
+      {
+        "date": "2025-12-24",
+        "price": 87652.0
+      },
+      {
+        "date": "2025-12-25",
+        "price": 87080.44
+      },
+      {
+        "date": "2025-12-26",
+        "price": 87338.29
+      },
+      {
+        "date": "2025-12-27",
+        "price": 87949.29
+      },
+      {
+        "date": "2025-12-28",
+        "price": 87971.99
+      },
+      {
+        "date": "2025-12-29",
+        "price": 87200.26
+      },
+      {
+        "date": "2025-12-30",
+        "price": 88544.43
+      },
+      {
+        "date": "2025-12-31",
+        "price": 87697.57
+      },
+      {
+        "date": "2026-01-01",
+        "price": 88878.3
+      },
+      {
+        "date": "2026-01-02",
+        "price": 90153.15
+      },
+      {
+        "date": "2026-01-03",
+        "price": 90704.56
+      },
+      {
+        "date": "2026-01-04",
+        "price": 91999.99
+      },
+      {
+        "date": "2026-01-05",
+        "price": 94111.49
+      },
+      {
+        "date": "2026-01-06",
+        "price": 93794.39
+      },
+      {
+        "date": "2026-01-07",
+        "price": 91397.11
+      },
+      {
+        "date": "2026-01-08",
+        "price": 91110.39
+      },
+      {
+        "date": "2026-01-09",
+        "price": 90498.43
+      },
+      {
+        "date": "2026-01-10",
+        "price": 90444.88
+      },
+      {
+        "date": "2026-01-11",
+        "price": 90982.35
+      },
+      {
+        "date": "2026-01-12",
+        "price": 91206.88
+      },
+      {
+        "date": "2026-01-13",
+        "price": 95436.28
+      },
+      {
+        "date": "2026-01-14",
+        "price": 96988.67
+      },
+      {
+        "date": "2026-01-15",
+        "price": 95529.86
+      },
+      {
+        "date": "2026-01-16",
+        "price": 95562.89
+      },
+      {
+        "date": "2026-01-17",
+        "price": 95143.44
+      },
+      {
+        "date": "2026-01-18",
+        "price": 93117.54
+      },
+      {
+        "date": "2026-01-19",
+        "price": 92613.46
+      },
+      {
+        "date": "2026-01-20",
+        "price": 88485.46
+      },
+      {
+        "date": "2026-01-21",
+        "price": 89611.04
+      },
+      {
+        "date": "2026-01-22",
+        "price": 89579.27
+      },
+      {
+        "date": "2026-01-23",
+        "price": 89626.83
+      },
+      {
+        "date": "2026-01-24",
+        "price": 89272.04
+      },
+      {
+        "date": "2026-01-25",
+        "price": 86649.27
+      },
+      {
+        "date": "2026-01-26",
+        "price": 88357.77
+      },
+      {
+        "date": "2026-01-27",
+        "price": 89260.5
+      },
+      {
+        "date": "2026-01-28",
+        "price": 89249.46
+      },
+      {
+        "date": "2026-01-29",
+        "price": 84684.39
+      },
+      {
+        "date": "2026-01-30",
+        "price": 84240.31
+      },
+      {
+        "date": "2026-01-31",
+        "price": 78805.8
+      },
+      {
+        "date": "2026-02-01",
+        "price": 76934.4
+      },
+      {
+        "date": "2026-02-02",
+        "price": 78794.56
+      },
+      {
+        "date": "2026-02-03",
+        "price": 75751.88
+      },
+      {
+        "date": "2026-02-04",
+        "price": 73160.68
+      },
+      {
+        "date": "2026-02-05",
+        "price": 62754.09
+      },
+      {
+        "date": "2026-02-06",
+        "price": 70588.22
+      },
+      {
+        "date": "2026-02-07",
+        "price": 69310.38
+      },
+      {
+        "date": "2026-02-08",
+        "price": 70315.68
+      },
+      {
+        "date": "2026-02-09",
+        "price": 70120.2
+      },
+      {
+        "date": "2026-02-10",
+        "price": 68837.86
+      },
+      {
+        "date": "2026-02-11",
+        "price": 67087.89
+      },
+      {
+        "date": "2026-02-12",
+        "price": 66252.28
+      },
+      {
+        "date": "2026-02-13",
+        "price": 68866.62
+      },
+      {
+        "date": "2026-02-14",
+        "price": 69840.4
+      },
+      {
+        "date": "2026-02-15",
+        "price": 68817.98
+      },
+      {
+        "date": "2026-02-16",
+        "price": 68833.27
+      },
+      {
+        "date": "2026-02-17",
+        "price": 67498.2
+      },
+      {
+        "date": "2026-02-18",
+        "price": 66445.59
+      },
+      {
+        "date": "2026-02-19",
+        "price": 66970.73
+      },
+      {
+        "date": "2026-02-20",
+        "price": 68022.85
+      },
+      {
+        "date": "2026-02-21",
+        "price": 68023.17
+      },
+      {
+        "date": "2026-02-22",
+        "price": 67637.42
+      },
+      {
+        "date": "2026-02-23",
+        "price": 64665.99
+      },
+      {
+        "date": "2026-02-24",
+        "price": 64024.6
+      },
+      {
+        "date": "2026-02-25",
+        "price": 67957.93
+      },
+      {
+        "date": "2026-02-26",
+        "price": 67481.4
+      },
+      {
+        "date": "2026-02-27",
+        "price": 65882.98
+      },
+      {
+        "date": "2026-02-28",
+        "price": 66954.13
+      },
+      {
+        "date": "2026-03-01",
+        "price": 65721.17
+      },
+      {
+        "date": "2026-03-02",
+        "price": 68811.43
+      },
+      {
+        "date": "2026-03-03",
+        "price": 68263.23
+      },
+      {
+        "date": "2026-03-04",
+        "price": 72747.38
+      },
+      {
+        "date": "2026-03-05",
+        "price": 70858.6
+      },
+      {
+        "date": "2026-03-06",
+        "price": 68118.25
+      },
+      {
+        "date": "2026-03-07",
+        "price": 67264.19
+      },
+      {
+        "date": "2026-03-08",
+        "price": 66007.38
+      },
+      {
+        "date": "2026-03-09",
+        "price": 68374.92
+      },
+      {
+        "date": "2026-03-10",
+        "price": 69937.15
+      },
+      {
+        "date": "2026-03-11",
+        "price": 70192.65
+      },
+      {
+        "date": "2026-03-12",
+        "price": 70489.42
+      },
+      {
+        "date": "2026-03-13",
+        "price": 70968.63
+      },
+      {
+        "date": "2026-03-14",
+        "price": 71211.28
+      },
+      {
+        "date": "2026-03-15",
+        "price": 72741.88
+      },
+      {
+        "date": "2026-03-16",
+        "price": 74879.98
+      },
+      {
+        "date": "2026-03-17",
+        "price": 73908.83
+      },
+      {
+        "date": "2026-03-18",
+        "price": 71256.1
+      },
+      {
+        "date": "2026-03-19",
+        "price": 69977.88
+      },
+      {
+        "date": "2026-03-20",
+        "price": 70494.62
+      },
+      {
+        "date": "2026-03-21",
+        "price": 68747.47
+      },
+      {
+        "date": "2026-03-22",
+        "price": 67865.47
+      },
+      {
+        "date": "2026-03-23",
+        "price": 70910.84
+      },
+      {
+        "date": "2026-03-24",
+        "price": 70601.73
+      },
+      {
+        "date": "2026-03-25",
+        "price": 71334.09
+      },
+      {
+        "date": "2026-03-26",
+        "price": 68807.52
+      },
+      {
+        "date": "2026-03-27",
+        "price": 66428.47
+      },
+      {
+        "date": "2026-03-28",
+        "price": 66393.38
+      },
+      {
+        "date": "2026-03-29",
+        "price": 66070.33
+      },
+      {
+        "date": "2026-03-30",
+        "price": 66794.15
+      },
+      {
+        "date": "2026-03-31",
+        "price": 68297.52
+      },
+      {
+        "date": "2026-04-01",
+        "price": 68106.86
+      },
+      {
+        "date": "2026-04-02",
+        "price": 66887.48
+      },
+      {
+        "date": "2026-04-03",
+        "price": 66939.09
+      },
+      {
+        "date": "2026-04-04",
+        "price": 67303.95
+      },
+      {
+        "date": "2026-04-05",
+        "price": 69007.23
+      },
+      {
+        "date": "2026-04-06",
+        "price": 68878.64
+      },
+      {
+        "date": "2026-04-07",
+        "price": 71964.45
+      },
+      {
+        "date": "2026-04-08",
+        "price": 71078.16
+      },
+      {
+        "date": "2026-04-09",
+        "price": 71831.7
+      },
+      {
+        "date": "2026-04-10",
+        "price": 72959.51
+      },
+      {
+        "date": "2026-04-11",
+        "price": 73052.08
+      },
+      {
+        "date": "2026-04-12",
+        "price": 70726.65
+      },
+      {
+        "date": "2026-04-13",
+        "price": 74496.7
+      },
+      {
+        "date": "2026-04-14",
+        "price": 74158.73
+      },
+      {
+        "date": "2026-04-15",
+        "price": 74806.49
+      },
+      {
+        "date": "2026-04-16",
+        "price": 75099.58
+      },
+      {
+        "date": "2026-04-17",
+        "price": 77097.65
+      }
+    ]
+  }
+}

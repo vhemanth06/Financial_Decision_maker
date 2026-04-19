@@ -1,0 +1,1067 @@
+{
+  "date": "2026-04-18",
+  "price": {
+    "ETH": 2350.57
+  },
+  "symbol": {
+    "ETH": "ETH"
+  },
+  "momentum": {
+    "ETH": "bearish"
+  },
+  "news": {
+    "ETH": [
+      "The set of ETH-focused signals from April 18, 2026 centers on a major DeFi security incident, a prominent caution from a core Ethereum figure about tech governance, and broader market activity in another major chain that provides context for overall sentiment. CoinDesk reported the largest crypto exploit of the year to date, with about $292 million drained from Kelp DAO and wrapped ether stranded across 20 chains. The incident underscores the fragility of cross-chain and wrapped-asset infrastructure and highlights how liquidity and asset custody can become fragmented across multiple networks. In the same coverage, Ethereum co-founder Joseph Lubin warned about the dangers of AI being controlled by a handful of large tech firms, framing a governance and systemic-concentration risk narrative that resonates with the decentralized ethos often associated with Ethereum\u2019s vision. Together, these pieces foreground security and governance as central themes for the ETH ecosystem in this period (CoinDesk). CoinDesk\u2019s coverage of Lubin\u2019s warning places a governance and technology-centralization lens on the Ethereum narrative, signaling that Ethereum\u2019s broader ecosystem is being discussed not just in terms of programmability and scale, but also in relation to how control over transformative technologies like AI could influence the openness and resilience of distributed networks. This sentiment aligns with ongoing conversations around decentralization, open ecosystems, and the potential external pressures\u2014regulatory, corporate, or technocratic\u2014that could affect how Ethereum and related platforms evolve. The juxtaposition of a security crisis and a governance warning suggests a period where participants are weighing both operational risk and larger structural questions about who wields influence over foundational technologies (CoinDesk). In addition to the Ethereum-related items, Cointelegraph\u2019s report on Solana futures open interest rising 20% over the week adds a broader market backdrop: traders are actively engaging with derivatives and contemplating potential levels for major altcoins, even as the crypto market faces notable security and governance considerations. While this piece centers on Solana rather than Ethereum, it contributes to a broader mood of continued risk-taking and speculative activity within major blockchain ecosystems. The existence of rising futures activity across a leading chain indicates that participants are maintaining liquidity and trading interest across networks, a factor that indirectly shapes the context in which Ethereum-specific events unfold (Cointelegraph). Key themes and developments: - Security and cross-chain risk: The Kelp DAO incident with $292 million drained and wrapped ETH stranded across 20 chains highlights vulnerabilities in cross-chain bridges and wrapped-asset infrastructures, emphasizing operational risk in multi-chain ecosystems. - Governance and decentralization concerns: Lubin\u2019s warning about AI concentration by a few large tech firms foregrounds debates about centralized control versus open, decentralized architectures, tying into Ethereum\u2019s broader narrative around trustlessness and distributed governance. - Broader market activity and sentiment: Solana futures open interest activity signals ongoing engagement with derivatives and risk-taking in major ecosystems, suggesting a market environment where investors remain active despite high-profile security and governance concerns. Overall market sentiment based on these articles: The collection paints a cautious but engaged sentiment toward the crypto space. The substantial DeFi security breach by Kelp DAO introduces a clear risk narrative and prompts attention to infrastructure reliability and asset custody across chains. Lubin\u2019s governance warning reinforces a focus on decentralization and resilience against centralized control in technology, aligning with long-standing ETH cultural themes. At the same time, active derivatives activity on Solana indicates that traders continue to pursue opportunities and liquidity across major networks, signaling that market participants are maintaining risk tolerance and forward-looking engagement even as security and governance questions loom. Taken together, the articles suggest a bifurcated mood: vigilance over vulnerabilities and governance without a retreat from participation or experimentation in the ecosystem, with Ethereum\u2019s decentralization ethos staying a salient frame for interpreting these developments (CoinDesk; Cointelegraph)."
+    ]
+  },
+  "10k": {
+    "ETH": null
+  },
+  "10q": {
+    "ETH": null
+  },
+  "history_price": {
+    "ETH": [
+      {
+        "date": "2025-08-01",
+        "price": 3491.19
+      },
+      {
+        "date": "2025-08-02",
+        "price": 3394.85
+      },
+      {
+        "date": "2025-08-03",
+        "price": 3499.5
+      },
+      {
+        "date": "2025-08-04",
+        "price": 3723.12
+      },
+      {
+        "date": "2025-08-05",
+        "price": 3613.2
+      },
+      {
+        "date": "2025-08-06",
+        "price": 3684.14
+      },
+      {
+        "date": "2025-08-07",
+        "price": 3916.68
+      },
+      {
+        "date": "2025-08-08",
+        "price": 4008.63
+      },
+      {
+        "date": "2025-08-09",
+        "price": 4268.66
+      },
+      {
+        "date": "2025-08-10",
+        "price": 4254.57
+      },
+      {
+        "date": "2025-08-11",
+        "price": 4229.51
+      },
+      {
+        "date": "2025-08-12",
+        "price": 4593.0
+      },
+      {
+        "date": "2025-08-13",
+        "price": 4750.57
+      },
+      {
+        "date": "2025-08-14",
+        "price": 4551.71
+      },
+      {
+        "date": "2025-08-15",
+        "price": 4443.02
+      },
+      {
+        "date": "2025-08-16",
+        "price": 4422.85
+      },
+      {
+        "date": "2025-08-17",
+        "price": 4472.92
+      },
+      {
+        "date": "2025-08-18",
+        "price": 4313.96
+      },
+      {
+        "date": "2025-08-19",
+        "price": 4085.11
+      },
+      {
+        "date": "2025-08-20",
+        "price": 4338.38
+      },
+      {
+        "date": "2025-08-21",
+        "price": 4231.45
+      },
+      {
+        "date": "2025-08-22",
+        "price": 4834.18
+      },
+      {
+        "date": "2025-08-23",
+        "price": 4779.79
+      },
+      {
+        "date": "2025-08-24",
+        "price": 4789.5
+      },
+      {
+        "date": "2025-08-25",
+        "price": 4391.05
+      },
+      {
+        "date": "2025-08-26",
+        "price": 4607.01
+      },
+      {
+        "date": "2025-08-27",
+        "price": 4509.11
+      },
+      {
+        "date": "2025-08-28",
+        "price": 4512.09
+      },
+      {
+        "date": "2025-08-29",
+        "price": 4360.99
+      },
+      {
+        "date": "2025-08-30",
+        "price": 4374.56
+      },
+      {
+        "date": "2025-08-31",
+        "price": 4394.22
+      },
+      {
+        "date": "2025-09-01",
+        "price": 4306.17
+      },
+      {
+        "date": "2025-09-02",
+        "price": 4332.63
+      },
+      {
+        "date": "2025-09-03",
+        "price": 4455.18
+      },
+      {
+        "date": "2025-09-04",
+        "price": 4306.98
+      },
+      {
+        "date": "2025-09-05",
+        "price": 4308.29
+      },
+      {
+        "date": "2025-09-06",
+        "price": 4277.15
+      },
+      {
+        "date": "2025-09-07",
+        "price": 4315.98
+      },
+      {
+        "date": "2025-09-08",
+        "price": 4311.63
+      },
+      {
+        "date": "2025-09-09",
+        "price": 4317.52
+      },
+      {
+        "date": "2025-09-10",
+        "price": 4353.48
+      },
+      {
+        "date": "2025-09-11",
+        "price": 4464.78
+      },
+      {
+        "date": "2025-09-12",
+        "price": 4695.7
+      },
+      {
+        "date": "2025-09-13",
+        "price": 4647.46
+      },
+      {
+        "date": "2025-09-14",
+        "price": 4606.71
+      },
+      {
+        "date": "2025-09-15",
+        "price": 4520.64
+      },
+      {
+        "date": "2025-09-16",
+        "price": 4504.09
+      },
+      {
+        "date": "2025-09-17",
+        "price": 4588.67
+      },
+      {
+        "date": "2025-09-18",
+        "price": 4589.13
+      },
+      {
+        "date": "2025-09-19",
+        "price": 4470.04
+      },
+      {
+        "date": "2025-09-20",
+        "price": 4482.39
+      },
+      {
+        "date": "2025-09-21",
+        "price": 4443.49
+      },
+      {
+        "date": "2025-09-22",
+        "price": 4199.23
+      },
+      {
+        "date": "2025-09-23",
+        "price": 4176.26
+      },
+      {
+        "date": "2025-09-24",
+        "price": 4143.0
+      },
+      {
+        "date": "2025-09-25",
+        "price": 3856.4
+      },
+      {
+        "date": "2025-09-26",
+        "price": 4025.19
+      },
+      {
+        "date": "2025-09-27",
+        "price": 4012.0
+      },
+      {
+        "date": "2025-09-28",
+        "price": 4138.94
+      },
+      {
+        "date": "2025-09-29",
+        "price": 4176.99
+      },
+      {
+        "date": "2025-09-30",
+        "price": 4141.12
+      },
+      {
+        "date": "2025-10-01",
+        "price": 4332.75
+      },
+      {
+        "date": "2025-10-02",
+        "price": 4485.03
+      },
+      {
+        "date": "2025-10-03",
+        "price": 4508.49
+      },
+      {
+        "date": "2025-10-04",
+        "price": 4487.1
+      },
+      {
+        "date": "2025-10-05",
+        "price": 4509.69
+      },
+      {
+        "date": "2025-10-06",
+        "price": 4674.85
+      },
+      {
+        "date": "2025-10-07",
+        "price": 4453.42
+      },
+      {
+        "date": "2025-10-08",
+        "price": 4525.13
+      },
+      {
+        "date": "2025-10-09",
+        "price": 4364.69
+      },
+      {
+        "date": "2025-10-10",
+        "price": 3857.22
+      },
+      {
+        "date": "2025-10-11",
+        "price": 3759.8
+      },
+      {
+        "date": "2025-10-12",
+        "price": 4157.63
+      },
+      {
+        "date": "2025-10-13",
+        "price": 4245.66
+      },
+      {
+        "date": "2025-10-14",
+        "price": 4125.59
+      },
+      {
+        "date": "2025-10-15",
+        "price": 3990.85
+      },
+      {
+        "date": "2025-10-16",
+        "price": 3895.57
+      },
+      {
+        "date": "2025-10-17",
+        "price": 3831.26
+      },
+      {
+        "date": "2025-10-18",
+        "price": 3891.49
+      },
+      {
+        "date": "2025-10-19",
+        "price": 3984.51
+      },
+      {
+        "date": "2025-10-20",
+        "price": 3982.05
+      },
+      {
+        "date": "2025-10-21",
+        "price": 3860.71
+      },
+      {
+        "date": "2025-10-22",
+        "price": 3807.54
+      },
+      {
+        "date": "2025-10-23",
+        "price": 3859.86
+      },
+      {
+        "date": "2025-10-24",
+        "price": 3937.79
+      },
+      {
+        "date": "2025-10-25",
+        "price": 3950.86
+      },
+      {
+        "date": "2025-10-26",
+        "price": 4163.26
+      },
+      {
+        "date": "2025-10-27",
+        "price": 4119.27
+      },
+      {
+        "date": "2025-10-28",
+        "price": 3982.02
+      },
+      {
+        "date": "2025-10-29",
+        "price": 3906.76
+      },
+      {
+        "date": "2025-10-30",
+        "price": 3805.08
+      },
+      {
+        "date": "2025-10-31",
+        "price": 3853.38
+      },
+      {
+        "date": "2025-11-01",
+        "price": 3873.11
+      },
+      {
+        "date": "2025-11-02",
+        "price": 3899.46
+      },
+      {
+        "date": "2025-11-03",
+        "price": 3597.34
+      },
+      {
+        "date": "2025-11-04",
+        "price": 3303.95
+      },
+      {
+        "date": "2025-11-05",
+        "price": 3423.37
+      },
+      {
+        "date": "2025-11-06",
+        "price": 3316.0
+      },
+      {
+        "date": "2025-11-07",
+        "price": 3434.47
+      },
+      {
+        "date": "2025-11-08",
+        "price": 3405.79
+      },
+      {
+        "date": "2025-11-09",
+        "price": 3587.35
+      },
+      {
+        "date": "2025-11-10",
+        "price": 3562.14
+      },
+      {
+        "date": "2025-11-11",
+        "price": 3411.52
+      },
+      {
+        "date": "2025-11-12",
+        "price": 3412.55
+      },
+      {
+        "date": "2025-11-13",
+        "price": 3240.0
+      },
+      {
+        "date": "2025-11-14",
+        "price": 3105.95
+      },
+      {
+        "date": "2025-11-15",
+        "price": 3172.36
+      },
+      {
+        "date": "2025-11-16",
+        "price": 3099.47
+      },
+      {
+        "date": "2025-11-17",
+        "price": 3031.21
+      },
+      {
+        "date": "2025-11-18",
+        "price": 3125.25
+      },
+      {
+        "date": "2025-11-19",
+        "price": 3025.96
+      },
+      {
+        "date": "2025-11-20",
+        "price": 2840.39
+      },
+      {
+        "date": "2025-11-21",
+        "price": 2767.0
+      },
+      {
+        "date": "2025-11-22",
+        "price": 2777.09
+      },
+      {
+        "date": "2025-11-23",
+        "price": 2803.83
+      },
+      {
+        "date": "2025-11-24",
+        "price": 2954.74
+      },
+      {
+        "date": "2025-11-25",
+        "price": 2959.94
+      },
+      {
+        "date": "2025-11-26",
+        "price": 3019.84
+      },
+      {
+        "date": "2025-11-27",
+        "price": 3014.25
+      },
+      {
+        "date": "2025-11-28",
+        "price": 3030.13
+      },
+      {
+        "date": "2025-11-29",
+        "price": 2989.07
+      },
+      {
+        "date": "2025-11-30",
+        "price": 2991.69
+      },
+      {
+        "date": "2025-12-01",
+        "price": 2802.75
+      },
+      {
+        "date": "2025-12-02",
+        "price": 2993.49
+      },
+      {
+        "date": "2025-12-03",
+        "price": 3189.53
+      },
+      {
+        "date": "2025-12-04",
+        "price": 3129.94
+      },
+      {
+        "date": "2025-12-05",
+        "price": 3019.6
+      },
+      {
+        "date": "2025-12-06",
+        "price": 3036.78
+      },
+      {
+        "date": "2025-12-07",
+        "price": 3062.31
+      },
+      {
+        "date": "2025-12-08",
+        "price": 3124.14
+      },
+      {
+        "date": "2025-12-09",
+        "price": 3319.3
+      },
+      {
+        "date": "2025-12-10",
+        "price": 3321.51
+      },
+      {
+        "date": "2025-12-11",
+        "price": 3237.88
+      },
+      {
+        "date": "2025-12-12",
+        "price": 3085.53
+      },
+      {
+        "date": "2025-12-13",
+        "price": 3107.32
+      },
+      {
+        "date": "2025-12-14",
+        "price": 3074.46
+      },
+      {
+        "date": "2025-12-15",
+        "price": 2964.05
+      },
+      {
+        "date": "2025-12-16",
+        "price": 2950.72
+      },
+      {
+        "date": "2025-12-17",
+        "price": 2836.9
+      },
+      {
+        "date": "2025-12-18",
+        "price": 2822.14
+      },
+      {
+        "date": "2025-12-19",
+        "price": 2977.64
+      },
+      {
+        "date": "2025-12-20",
+        "price": 2978.22
+      },
+      {
+        "date": "2025-12-21",
+        "price": 3034.0
+      },
+      {
+        "date": "2025-12-22",
+        "price": 3016.81
+      },
+      {
+        "date": "2025-12-23",
+        "price": 2958.27
+      },
+      {
+        "date": "2025-12-24",
+        "price": 2946.45
+      },
+      {
+        "date": "2025-12-25",
+        "price": 2913.19
+      },
+      {
+        "date": "2025-12-26",
+        "price": 2925.06
+      },
+      {
+        "date": "2025-12-27",
+        "price": 2945.4
+      },
+      {
+        "date": "2025-12-28",
+        "price": 2953.29
+      },
+      {
+        "date": "2025-12-29",
+        "price": 2936.44
+      },
+      {
+        "date": "2025-12-30",
+        "price": 2967.27
+      },
+      {
+        "date": "2025-12-31",
+        "price": 2979.55
+      },
+      {
+        "date": "2026-01-01",
+        "price": 3000.0
+      },
+      {
+        "date": "2026-01-02",
+        "price": 3130.56
+      },
+      {
+        "date": "2026-01-03",
+        "price": 3142.12
+      },
+      {
+        "date": "2026-01-04",
+        "price": 3158.43
+      },
+      {
+        "date": "2026-01-05",
+        "price": 3208.3
+      },
+      {
+        "date": "2026-01-06",
+        "price": 3257.15
+      },
+      {
+        "date": "2026-01-07",
+        "price": 3178.29
+      },
+      {
+        "date": "2026-01-08",
+        "price": 3112.46
+      },
+      {
+        "date": "2026-01-09",
+        "price": 3087.38
+      },
+      {
+        "date": "2026-01-10",
+        "price": 3094.5
+      },
+      {
+        "date": "2026-01-11",
+        "price": 3107.23
+      },
+      {
+        "date": "2026-01-12",
+        "price": 3110.65
+      },
+      {
+        "date": "2026-01-13",
+        "price": 3326.77
+      },
+      {
+        "date": "2026-01-14",
+        "price": 3333.35
+      },
+      {
+        "date": "2026-01-15",
+        "price": 3321.36
+      },
+      {
+        "date": "2026-01-16",
+        "price": 3292.3
+      },
+      {
+        "date": "2026-01-17",
+        "price": 3308.18
+      },
+      {
+        "date": "2026-01-18",
+        "price": 3216.68
+      },
+      {
+        "date": "2026-01-19",
+        "price": 3181.22
+      },
+      {
+        "date": "2026-01-20",
+        "price": 2936.03
+      },
+      {
+        "date": "2026-01-21",
+        "price": 3011.31
+      },
+      {
+        "date": "2026-01-22",
+        "price": 2951.05
+      },
+      {
+        "date": "2026-01-23",
+        "price": 2957.74
+      },
+      {
+        "date": "2026-01-24",
+        "price": 2953.8
+      },
+      {
+        "date": "2026-01-25",
+        "price": 2818.64
+      },
+      {
+        "date": "2026-01-26",
+        "price": 2929.61
+      },
+      {
+        "date": "2026-01-27",
+        "price": 3026.17
+      },
+      {
+        "date": "2026-01-28",
+        "price": 3011.22
+      },
+      {
+        "date": "2026-01-29",
+        "price": 2822.47
+      },
+      {
+        "date": "2026-01-30",
+        "price": 2707.96
+      },
+      {
+        "date": "2026-01-31",
+        "price": 2454.19
+      },
+      {
+        "date": "2026-02-01",
+        "price": 2270.61
+      },
+      {
+        "date": "2026-02-02",
+        "price": 2345.51
+      },
+      {
+        "date": "2026-02-03",
+        "price": 2234.08
+      },
+      {
+        "date": "2026-02-04",
+        "price": 2147.84
+      },
+      {
+        "date": "2026-02-05",
+        "price": 1825.6
+      },
+      {
+        "date": "2026-02-06",
+        "price": 2064.39
+      },
+      {
+        "date": "2026-02-07",
+        "price": 2095.0
+      },
+      {
+        "date": "2026-02-08",
+        "price": 2089.2
+      },
+      {
+        "date": "2026-02-09",
+        "price": 2105.29
+      },
+      {
+        "date": "2026-02-10",
+        "price": 2020.2
+      },
+      {
+        "date": "2026-02-11",
+        "price": 1941.74
+      },
+      {
+        "date": "2026-02-12",
+        "price": 1947.97
+      },
+      {
+        "date": "2026-02-13",
+        "price": 2048.73
+      },
+      {
+        "date": "2026-02-14",
+        "price": 2085.57
+      },
+      {
+        "date": "2026-02-15",
+        "price": 1965.35
+      },
+      {
+        "date": "2026-02-16",
+        "price": 1998.53
+      },
+      {
+        "date": "2026-02-17",
+        "price": 1991.26
+      },
+      {
+        "date": "2026-02-18",
+        "price": 1955.77
+      },
+      {
+        "date": "2026-02-19",
+        "price": 1948.61
+      },
+      {
+        "date": "2026-02-20",
+        "price": 1969.25
+      },
+      {
+        "date": "2026-02-21",
+        "price": 1973.51
+      },
+      {
+        "date": "2026-02-22",
+        "price": 1957.91
+      },
+      {
+        "date": "2026-02-23",
+        "price": 1856.69
+      },
+      {
+        "date": "2026-02-24",
+        "price": 1851.54
+      },
+      {
+        "date": "2026-02-25",
+        "price": 2057.35
+      },
+      {
+        "date": "2026-02-26",
+        "price": 2026.71
+      },
+      {
+        "date": "2026-02-27",
+        "price": 1929.82
+      },
+      {
+        "date": "2026-02-28",
+        "price": 1964.65
+      },
+      {
+        "date": "2026-03-01",
+        "price": 1939.12
+      },
+      {
+        "date": "2026-03-02",
+        "price": 2027.26
+      },
+      {
+        "date": "2026-03-03",
+        "price": 1982.79
+      },
+      {
+        "date": "2026-03-04",
+        "price": 2129.3
+      },
+      {
+        "date": "2026-03-05",
+        "price": 2072.95
+      },
+      {
+        "date": "2026-03-06",
+        "price": 1978.08
+      },
+      {
+        "date": "2026-03-07",
+        "price": 1968.86
+      },
+      {
+        "date": "2026-03-08",
+        "price": 1935.01
+      },
+      {
+        "date": "2026-03-09",
+        "price": 1994.71
+      },
+      {
+        "date": "2026-03-10",
+        "price": 2036.9
+      },
+      {
+        "date": "2026-03-11",
+        "price": 2051.42
+      },
+      {
+        "date": "2026-03-12",
+        "price": 2073.25
+      },
+      {
+        "date": "2026-03-13",
+        "price": 2093.02
+      },
+      {
+        "date": "2026-03-14",
+        "price": 2097.59
+      },
+      {
+        "date": "2026-03-15",
+        "price": 2178.63
+      },
+      {
+        "date": "2026-03-16",
+        "price": 2351.45
+      },
+      {
+        "date": "2026-03-17",
+        "price": 2318.0
+      },
+      {
+        "date": "2026-03-18",
+        "price": 2205.84
+      },
+      {
+        "date": "2026-03-19",
+        "price": 2137.79
+      },
+      {
+        "date": "2026-03-20",
+        "price": 2145.87
+      },
+      {
+        "date": "2026-03-21",
+        "price": 2083.97
+      },
+      {
+        "date": "2026-03-22",
+        "price": 2052.85
+      },
+      {
+        "date": "2026-03-23",
+        "price": 2151.83
+      },
+      {
+        "date": "2026-03-24",
+        "price": 2155.9
+      },
+      {
+        "date": "2026-03-25",
+        "price": 2169.23
+      },
+      {
+        "date": "2026-03-26",
+        "price": 2060.14
+      },
+      {
+        "date": "2026-03-27",
+        "price": 1993.51
+      },
+      {
+        "date": "2026-03-28",
+        "price": 1995.96
+      },
+      {
+        "date": "2026-03-29",
+        "price": 1983.84
+      },
+      {
+        "date": "2026-03-30",
+        "price": 2025.79
+      },
+      {
+        "date": "2026-03-31",
+        "price": 2107.75
+      },
+      {
+        "date": "2026-04-01",
+        "price": 2139.94
+      },
+      {
+        "date": "2026-04-02",
+        "price": 2056.15
+      },
+      {
+        "date": "2026-04-03",
+        "price": 2053.54
+      },
+      {
+        "date": "2026-04-04",
+        "price": 2063.74
+      },
+      {
+        "date": "2026-04-05",
+        "price": 2109.35
+      },
+      {
+        "date": "2026-04-06",
+        "price": 2107.0
+      },
+      {
+        "date": "2026-04-07",
+        "price": 2241.99
+      },
+      {
+        "date": "2026-04-08",
+        "price": 2188.75
+      },
+      {
+        "date": "2026-04-09",
+        "price": 2190.7
+      },
+      {
+        "date": "2026-04-10",
+        "price": 2245.05
+      },
+      {
+        "date": "2026-04-11",
+        "price": 2285.99
+      },
+      {
+        "date": "2026-04-12",
+        "price": 2188.11
+      },
+      {
+        "date": "2026-04-13",
+        "price": 2369.76
+      },
+      {
+        "date": "2026-04-14",
+        "price": 2321.42
+      },
+      {
+        "date": "2026-04-15",
+        "price": 2359.06
+      },
+      {
+        "date": "2026-04-16",
+        "price": 2348.34
+      },
+      {
+        "date": "2026-04-17",
+        "price": 2419.93
+      }
+    ]
+  }
+}

@@ -1,0 +1,1067 @@
+{
+  "date": "2026-04-18",
+  "price": {
+    "TSLA": 400.6199951171875
+  },
+  "symbol": {
+    "TSLA": "TSLA"
+  },
+  "momentum": {
+    "TSLA": "bullish"
+  },
+  "news": {
+    "TSLA": [
+      "The collection of TSLA-related coverage from 2026-04-18 centers on Tesla expanding its robotaxi ambitions in the United States, alongside a mixed-but generally neutral market backdrop and comparative signals about its US leadership versus global peers. Across sources, the threads are: concrete operational progress in robotaxi deployment; emphasis on Tesla\u2019s current competitive position in the US; cautious or mixed investor sentiment about the stock; and broader tech/AI-market dynamics providing context for how investors view Tesla within a tech-heavy landscape. Operational developments and corporate positioning - Tesla\u2019s robotaxi expansion to Dallas and Houston represents the latest phase of its nascent robotaxi program. Reuters confirms the rollout to these two cities, noting Tesla announced via its official X account with videos showing Model Y vehicles operating without a driver or monitor in the front seat. The company published boundaries for the service, but did not disclose fleet size or pricing, underscoring a measured, iterative expansion rather than an immediate nationwide rollout. This development situates Tesla\u2019s robotaxi push as ongoing and incremental, extending the service beyond the prior Austin launch and the San Francisco Bay Area. (Reuters) - Investor's Business Daily similarly highlights the Dallas and Houston expansion as a continued deployment of Tesla\u2019s robotaxi service, framing it as a notable second wave of city introductions since the earlier launches, which reinforces the ongoing nature of Tesla\u2019s nascent autonomous ride-hailing effort. (Investor's Business Daily) Competitiveness and market positioning - Tesla\u2019s US leadership in the EV space is underscored by Elon Musk\u2019s post in response to a chart comparing US EV sales. The piece cites Tesla selling a substantial number of EVs in the US, placing it well ahead of competitors within the domestic market. The article notes that, while Tesla dominates the US, the global picture differs, with BYD described as three times larger on a global scale, highlighting a divergence between domestic strength and international competition. (Benzinga) - In line with the above, another perspective from Motley Fool notes that while price targets are being adjusted lower in some circles, a broad view among analysts remains that there is still substantial upside to the stock. The framing here is more about sentiment and expectations than current fundamentals, but it reinforces that analysts see Tesla as continuing to hold a leading position in the US while facing a more mixed global competitive landscape. (Motley Fool) Broader market context and investor sentiment - The market environment surrounding AI and tech equities on that date is described as having froth in some AI-related trades, even though the underlying fundamentals in AI sectors remain solid. This context matters for Tesla insofar as it is increasingly viewed as a tech-forward, AI-leaning company, including in its robotaxi initiatives, even as investors calibrate valuations in a broader AI cycle. (Yahoo Finance) - Additional tech-ecosystem context is provided by coverage of high-profile Musk-affiliated ventures beyond Tesla. SpaceX\u2019s IPO chatter is highlighted as a potential blockbuster, while another piece discusses a US political and regulatory scrutiny angle tied to a Musk-affiliated crypto project. Taken together, these items reflect a broader, mixed-atmosphere backdrop around Musk-led ventures, which can color investor sentiment toward Tesla within a wider tech arena. (Motley Fool; Benzinga) - The market narrative around Tesla also includes a forward-looking note from a market-coverage piece that signals investors are watching ahead of earnings, with specific attention to how market dynamics could interact with Tesla\u2019s ongoing robotaxi and EV positioning. (Investor's Business Daily) Overall market sentiment - Across these articles, the sentiment is broadly neutral, with pockets of optimism focused on Tesla\u2019s ongoing robotaxi expansion in the US and its apparent lead in the domestic EV market. At the same time, the coverage emphasizes international competition (BYD\u2019s global scale) and a cautious market environment for tech/AI equities, including commentators noting froth in AI spaces even as fundamentals remain solid. The mix suggests investors view Tesla as a continuing US strength with an evolving, still-unproven robotaxi program, while remaining mindful of broader tech-market dynamics and the competitive landscape. This neutral-to-mildly-positive tonal balance is consistent across Yahoo Finance, Motley Fool, Benzinga, Investor's Business Daily, and Reuters pieces cited here, with the overall takeaway being cautious optimism anchored by concrete operational progress in robotaxi deployment and a clear US leadership narrative, framed by broader market context and looming earnings."
+    ]
+  },
+  "10k": {
+    "TSLA": null
+  },
+  "10q": {
+    "TSLA": null
+  },
+  "history_price": {
+    "TSLA": [
+      {
+        "date": "2025-08-01",
+        "price": 302.6300048828125
+      },
+      {
+        "date": "2025-08-02",
+        "price": 302.6300048828125
+      },
+      {
+        "date": "2025-08-03",
+        "price": 302.6300048828125
+      },
+      {
+        "date": "2025-08-04",
+        "price": 309.260009765625
+      },
+      {
+        "date": "2025-08-05",
+        "price": 308.7200012207031
+      },
+      {
+        "date": "2025-08-06",
+        "price": 319.9100036621094
+      },
+      {
+        "date": "2025-08-07",
+        "price": 322.2699890136719
+      },
+      {
+        "date": "2025-08-08",
+        "price": 329.6499938964844
+      },
+      {
+        "date": "2025-08-09",
+        "price": 329.6499938964844
+      },
+      {
+        "date": "2025-08-10",
+        "price": 329.6499938964844
+      },
+      {
+        "date": "2025-08-11",
+        "price": 339.0299987792969
+      },
+      {
+        "date": "2025-08-12",
+        "price": 340.8399963378906
+      },
+      {
+        "date": "2025-08-13",
+        "price": 339.3800048828125
+      },
+      {
+        "date": "2025-08-14",
+        "price": 335.5799865722656
+      },
+      {
+        "date": "2025-08-15",
+        "price": 330.55999755859375
+      },
+      {
+        "date": "2025-08-16",
+        "price": 330.55999755859375
+      },
+      {
+        "date": "2025-08-17",
+        "price": 330.55999755859375
+      },
+      {
+        "date": "2025-08-18",
+        "price": 335.1600036621094
+      },
+      {
+        "date": "2025-08-19",
+        "price": 329.30999755859375
+      },
+      {
+        "date": "2025-08-20",
+        "price": 323.8999938964844
+      },
+      {
+        "date": "2025-08-21",
+        "price": 320.1099853515625
+      },
+      {
+        "date": "2025-08-22",
+        "price": 340.010009765625
+      },
+      {
+        "date": "2025-08-23",
+        "price": 340.010009765625
+      },
+      {
+        "date": "2025-08-24",
+        "price": 340.010009765625
+      },
+      {
+        "date": "2025-08-25",
+        "price": 346.6000061035156
+      },
+      {
+        "date": "2025-08-26",
+        "price": 351.6700134277344
+      },
+      {
+        "date": "2025-08-27",
+        "price": 349.6000061035156
+      },
+      {
+        "date": "2025-08-28",
+        "price": 345.9800109863281
+      },
+      {
+        "date": "2025-08-29",
+        "price": 333.8699951171875
+      },
+      {
+        "date": "2025-08-30",
+        "price": 333.8699951171875
+      },
+      {
+        "date": "2025-08-31",
+        "price": 333.8699951171875
+      },
+      {
+        "date": "2025-09-01",
+        "price": 333.8699951171875
+      },
+      {
+        "date": "2025-09-02",
+        "price": 329.3599853515625
+      },
+      {
+        "date": "2025-09-03",
+        "price": 334.0899963378906
+      },
+      {
+        "date": "2025-09-04",
+        "price": 338.5299987792969
+      },
+      {
+        "date": "2025-09-05",
+        "price": 350.8399963378906
+      },
+      {
+        "date": "2025-09-06",
+        "price": 350.8399963378906
+      },
+      {
+        "date": "2025-09-07",
+        "price": 350.8399963378906
+      },
+      {
+        "date": "2025-09-08",
+        "price": 346.3999938964844
+      },
+      {
+        "date": "2025-09-09",
+        "price": 346.9700012207031
+      },
+      {
+        "date": "2025-09-10",
+        "price": 347.7900085449219
+      },
+      {
+        "date": "2025-09-11",
+        "price": 368.80999755859375
+      },
+      {
+        "date": "2025-09-12",
+        "price": 395.94000244140625
+      },
+      {
+        "date": "2025-09-13",
+        "price": 395.94000244140625
+      },
+      {
+        "date": "2025-09-14",
+        "price": 395.94000244140625
+      },
+      {
+        "date": "2025-09-15",
+        "price": 410.0400085449219
+      },
+      {
+        "date": "2025-09-16",
+        "price": 421.6199951171875
+      },
+      {
+        "date": "2025-09-17",
+        "price": 425.8599853515625
+      },
+      {
+        "date": "2025-09-18",
+        "price": 416.8500061035156
+      },
+      {
+        "date": "2025-09-19",
+        "price": 426.07000732421875
+      },
+      {
+        "date": "2025-09-20",
+        "price": 426.07000732421875
+      },
+      {
+        "date": "2025-09-21",
+        "price": 426.07000732421875
+      },
+      {
+        "date": "2025-09-22",
+        "price": 434.2099914550781
+      },
+      {
+        "date": "2025-09-23",
+        "price": 425.8500061035156
+      },
+      {
+        "date": "2025-09-24",
+        "price": 442.7900085449219
+      },
+      {
+        "date": "2025-09-25",
+        "price": 423.3900146484375
+      },
+      {
+        "date": "2025-09-26",
+        "price": 440.3999938964844
+      },
+      {
+        "date": "2025-09-27",
+        "price": 440.3999938964844
+      },
+      {
+        "date": "2025-09-28",
+        "price": 440.3999938964844
+      },
+      {
+        "date": "2025-09-29",
+        "price": 443.2099914550781
+      },
+      {
+        "date": "2025-09-30",
+        "price": 444.7200012207031
+      },
+      {
+        "date": "2025-10-01",
+        "price": 459.4599914550781
+      },
+      {
+        "date": "2025-10-02",
+        "price": 436.0
+      },
+      {
+        "date": "2025-10-03",
+        "price": 429.8299865722656
+      },
+      {
+        "date": "2025-10-04",
+        "price": 429.8299865722656
+      },
+      {
+        "date": "2025-10-05",
+        "price": 429.8299865722656
+      },
+      {
+        "date": "2025-10-06",
+        "price": 453.25
+      },
+      {
+        "date": "2025-10-07",
+        "price": 433.0899963378906
+      },
+      {
+        "date": "2025-10-08",
+        "price": 438.69000244140625
+      },
+      {
+        "date": "2025-10-09",
+        "price": 435.5400085449219
+      },
+      {
+        "date": "2025-10-10",
+        "price": 413.489990234375
+      },
+      {
+        "date": "2025-10-11",
+        "price": 413.489990234375
+      },
+      {
+        "date": "2025-10-12",
+        "price": 413.489990234375
+      },
+      {
+        "date": "2025-10-13",
+        "price": 435.8999938964844
+      },
+      {
+        "date": "2025-10-14",
+        "price": 429.239990234375
+      },
+      {
+        "date": "2025-10-15",
+        "price": 435.1499938964844
+      },
+      {
+        "date": "2025-10-16",
+        "price": 428.75
+      },
+      {
+        "date": "2025-10-17",
+        "price": 439.30999755859375
+      },
+      {
+        "date": "2025-10-18",
+        "price": 439.30999755859375
+      },
+      {
+        "date": "2025-10-19",
+        "price": 439.30999755859375
+      },
+      {
+        "date": "2025-10-20",
+        "price": 447.42999267578125
+      },
+      {
+        "date": "2025-10-21",
+        "price": 442.6000061035156
+      },
+      {
+        "date": "2025-10-22",
+        "price": 438.9700012207031
+      },
+      {
+        "date": "2025-10-23",
+        "price": 448.9800109863281
+      },
+      {
+        "date": "2025-10-24",
+        "price": 433.7200012207031
+      },
+      {
+        "date": "2025-10-25",
+        "price": 433.7200012207031
+      },
+      {
+        "date": "2025-10-26",
+        "price": 433.7200012207031
+      },
+      {
+        "date": "2025-10-27",
+        "price": 452.4200134277344
+      },
+      {
+        "date": "2025-10-28",
+        "price": 460.54998779296875
+      },
+      {
+        "date": "2025-10-29",
+        "price": 461.510009765625
+      },
+      {
+        "date": "2025-10-30",
+        "price": 440.1000061035156
+      },
+      {
+        "date": "2025-10-31",
+        "price": 456.55999755859375
+      },
+      {
+        "date": "2025-11-01",
+        "price": 456.55999755859375
+      },
+      {
+        "date": "2025-11-02",
+        "price": 456.55999755859375
+      },
+      {
+        "date": "2025-11-03",
+        "price": 468.3699951171875
+      },
+      {
+        "date": "2025-11-04",
+        "price": 444.260009765625
+      },
+      {
+        "date": "2025-11-05",
+        "price": 462.07000732421875
+      },
+      {
+        "date": "2025-11-06",
+        "price": 445.9100036621094
+      },
+      {
+        "date": "2025-11-07",
+        "price": 429.5199890136719
+      },
+      {
+        "date": "2025-11-08",
+        "price": 429.5199890136719
+      },
+      {
+        "date": "2025-11-09",
+        "price": 429.5199890136719
+      },
+      {
+        "date": "2025-11-10",
+        "price": 445.2300109863281
+      },
+      {
+        "date": "2025-11-11",
+        "price": 439.6199951171875
+      },
+      {
+        "date": "2025-11-12",
+        "price": 430.6000061035156
+      },
+      {
+        "date": "2025-11-13",
+        "price": 401.989990234375
+      },
+      {
+        "date": "2025-11-14",
+        "price": 404.3500061035156
+      },
+      {
+        "date": "2025-11-15",
+        "price": 404.3500061035156
+      },
+      {
+        "date": "2025-11-16",
+        "price": 404.3500061035156
+      },
+      {
+        "date": "2025-11-17",
+        "price": 408.9200134277344
+      },
+      {
+        "date": "2025-11-18",
+        "price": 401.25
+      },
+      {
+        "date": "2025-11-19",
+        "price": 403.989990234375
+      },
+      {
+        "date": "2025-11-20",
+        "price": 395.2300109863281
+      },
+      {
+        "date": "2025-11-21",
+        "price": 391.0899963378906
+      },
+      {
+        "date": "2025-11-22",
+        "price": 391.0899963378906
+      },
+      {
+        "date": "2025-11-23",
+        "price": 391.0899963378906
+      },
+      {
+        "date": "2025-11-24",
+        "price": 417.7799987792969
+      },
+      {
+        "date": "2025-11-25",
+        "price": 419.3999938964844
+      },
+      {
+        "date": "2025-11-26",
+        "price": 426.5799865722656
+      },
+      {
+        "date": "2025-11-27",
+        "price": 426.5799865722656
+      },
+      {
+        "date": "2025-11-28",
+        "price": 430.1700134277344
+      },
+      {
+        "date": "2025-11-29",
+        "price": 430.1700134277344
+      },
+      {
+        "date": "2025-11-30",
+        "price": 430.1700134277344
+      },
+      {
+        "date": "2025-12-01",
+        "price": 430.1400146484375
+      },
+      {
+        "date": "2025-12-02",
+        "price": 429.239990234375
+      },
+      {
+        "date": "2025-12-03",
+        "price": 446.739990234375
+      },
+      {
+        "date": "2025-12-04",
+        "price": 454.5299987792969
+      },
+      {
+        "date": "2025-12-05",
+        "price": 455.0
+      },
+      {
+        "date": "2025-12-06",
+        "price": 455.0
+      },
+      {
+        "date": "2025-12-07",
+        "price": 455.0
+      },
+      {
+        "date": "2025-12-08",
+        "price": 439.5799865722656
+      },
+      {
+        "date": "2025-12-09",
+        "price": 445.1700134277344
+      },
+      {
+        "date": "2025-12-10",
+        "price": 451.45001220703125
+      },
+      {
+        "date": "2025-12-11",
+        "price": 446.8900146484375
+      },
+      {
+        "date": "2025-12-12",
+        "price": 458.9599914550781
+      },
+      {
+        "date": "2025-12-13",
+        "price": 458.9599914550781
+      },
+      {
+        "date": "2025-12-14",
+        "price": 458.9599914550781
+      },
+      {
+        "date": "2025-12-15",
+        "price": 475.30999755859375
+      },
+      {
+        "date": "2025-12-16",
+        "price": 489.8800048828125
+      },
+      {
+        "date": "2025-12-17",
+        "price": 467.260009765625
+      },
+      {
+        "date": "2025-12-18",
+        "price": 483.3699951171875
+      },
+      {
+        "date": "2025-12-19",
+        "price": 481.20001220703125
+      },
+      {
+        "date": "2025-12-20",
+        "price": 481.20001220703125
+      },
+      {
+        "date": "2025-12-21",
+        "price": 481.20001220703125
+      },
+      {
+        "date": "2025-12-22",
+        "price": 488.7300109863281
+      },
+      {
+        "date": "2025-12-23",
+        "price": 485.55999755859375
+      },
+      {
+        "date": "2025-12-24",
+        "price": 485.3999938964844
+      },
+      {
+        "date": "2025-12-25",
+        "price": 485.3999938964844
+      },
+      {
+        "date": "2025-12-26",
+        "price": 475.19000244140625
+      },
+      {
+        "date": "2025-12-27",
+        "price": 475.19000244140625
+      },
+      {
+        "date": "2025-12-28",
+        "price": 475.19000244140625
+      },
+      {
+        "date": "2025-12-29",
+        "price": 459.6400146484375
+      },
+      {
+        "date": "2025-12-30",
+        "price": 454.42999267578125
+      },
+      {
+        "date": "2025-12-31",
+        "price": 449.7200012207031
+      },
+      {
+        "date": "2026-01-01",
+        "price": 449.7200012207031
+      },
+      {
+        "date": "2026-01-02",
+        "price": 438.07000732421875
+      },
+      {
+        "date": "2026-01-03",
+        "price": 438.07000732421875
+      },
+      {
+        "date": "2026-01-04",
+        "price": 438.07000732421875
+      },
+      {
+        "date": "2026-01-05",
+        "price": 451.6700134277344
+      },
+      {
+        "date": "2026-01-06",
+        "price": 432.9599914550781
+      },
+      {
+        "date": "2026-01-07",
+        "price": 431.4100036621094
+      },
+      {
+        "date": "2026-01-08",
+        "price": 435.79998779296875
+      },
+      {
+        "date": "2026-01-09",
+        "price": 445.010009765625
+      },
+      {
+        "date": "2026-01-10",
+        "price": 445.010009765625
+      },
+      {
+        "date": "2026-01-11",
+        "price": 445.010009765625
+      },
+      {
+        "date": "2026-01-12",
+        "price": 448.9599914550781
+      },
+      {
+        "date": "2026-01-13",
+        "price": 447.20001220703125
+      },
+      {
+        "date": "2026-01-14",
+        "price": 439.20001220703125
+      },
+      {
+        "date": "2026-01-15",
+        "price": 438.57000732421875
+      },
+      {
+        "date": "2026-01-16",
+        "price": 437.5
+      },
+      {
+        "date": "2026-01-17",
+        "price": 437.5
+      },
+      {
+        "date": "2026-01-18",
+        "price": 437.5
+      },
+      {
+        "date": "2026-01-19",
+        "price": 437.5
+      },
+      {
+        "date": "2026-01-20",
+        "price": 419.25
+      },
+      {
+        "date": "2026-01-21",
+        "price": 431.44000244140625
+      },
+      {
+        "date": "2026-01-22",
+        "price": 449.3599853515625
+      },
+      {
+        "date": "2026-01-23",
+        "price": 449.05999755859375
+      },
+      {
+        "date": "2026-01-24",
+        "price": 449.05999755859375
+      },
+      {
+        "date": "2026-01-25",
+        "price": 449.05999755859375
+      },
+      {
+        "date": "2026-01-26",
+        "price": 435.20001220703125
+      },
+      {
+        "date": "2026-01-27",
+        "price": 430.8999938964844
+      },
+      {
+        "date": "2026-01-28",
+        "price": 431.4599914550781
+      },
+      {
+        "date": "2026-01-29",
+        "price": 416.55999755859375
+      },
+      {
+        "date": "2026-01-30",
+        "price": 430.4100036621094
+      },
+      {
+        "date": "2026-01-31",
+        "price": 430.4100036621094
+      },
+      {
+        "date": "2026-02-01",
+        "price": 430.4100036621094
+      },
+      {
+        "date": "2026-02-02",
+        "price": 421.80999755859375
+      },
+      {
+        "date": "2026-02-03",
+        "price": 421.9599914550781
+      },
+      {
+        "date": "2026-02-04",
+        "price": 406.010009765625
+      },
+      {
+        "date": "2026-02-05",
+        "price": 397.2099914550781
+      },
+      {
+        "date": "2026-02-06",
+        "price": 411.1099853515625
+      },
+      {
+        "date": "2026-02-07",
+        "price": 411.1099853515625
+      },
+      {
+        "date": "2026-02-08",
+        "price": 411.1099853515625
+      },
+      {
+        "date": "2026-02-09",
+        "price": 417.32000732421875
+      },
+      {
+        "date": "2026-02-10",
+        "price": 425.2099914550781
+      },
+      {
+        "date": "2026-02-11",
+        "price": 428.2699890136719
+      },
+      {
+        "date": "2026-02-12",
+        "price": 417.07000732421875
+      },
+      {
+        "date": "2026-02-13",
+        "price": 417.44000244140625
+      },
+      {
+        "date": "2026-02-14",
+        "price": 417.44000244140625
+      },
+      {
+        "date": "2026-02-15",
+        "price": 417.44000244140625
+      },
+      {
+        "date": "2026-02-16",
+        "price": 417.44000244140625
+      },
+      {
+        "date": "2026-02-17",
+        "price": 410.6300048828125
+      },
+      {
+        "date": "2026-02-18",
+        "price": 411.32000732421875
+      },
+      {
+        "date": "2026-02-19",
+        "price": 411.7099914550781
+      },
+      {
+        "date": "2026-02-20",
+        "price": 411.82000732421875
+      },
+      {
+        "date": "2026-02-21",
+        "price": 411.82000732421875
+      },
+      {
+        "date": "2026-02-22",
+        "price": 411.82000732421875
+      },
+      {
+        "date": "2026-02-23",
+        "price": 399.8299865722656
+      },
+      {
+        "date": "2026-02-24",
+        "price": 409.3800048828125
+      },
+      {
+        "date": "2026-02-25",
+        "price": 417.3999938964844
+      },
+      {
+        "date": "2026-02-26",
+        "price": 408.5799865722656
+      },
+      {
+        "date": "2026-02-27",
+        "price": 402.510009765625
+      },
+      {
+        "date": "2026-02-28",
+        "price": 402.510009765625
+      },
+      {
+        "date": "2026-03-01",
+        "price": 402.510009765625
+      },
+      {
+        "date": "2026-03-02",
+        "price": 403.32000732421875
+      },
+      {
+        "date": "2026-03-03",
+        "price": 392.42999267578125
+      },
+      {
+        "date": "2026-03-04",
+        "price": 405.94000244140625
+      },
+      {
+        "date": "2026-03-05",
+        "price": 405.54998779296875
+      },
+      {
+        "date": "2026-03-06",
+        "price": 396.7300109863281
+      },
+      {
+        "date": "2026-03-07",
+        "price": 396.7300109863281
+      },
+      {
+        "date": "2026-03-08",
+        "price": 396.7300109863281
+      },
+      {
+        "date": "2026-03-09",
+        "price": 398.67999267578125
+      },
+      {
+        "date": "2026-03-10",
+        "price": 399.2349853515625
+      },
+      {
+        "date": "2026-03-11",
+        "price": 407.82000732421875
+      },
+      {
+        "date": "2026-03-12",
+        "price": 395.010009765625
+      },
+      {
+        "date": "2026-03-13",
+        "price": 391.20001220703125
+      },
+      {
+        "date": "2026-03-14",
+        "price": 391.20001220703125
+      },
+      {
+        "date": "2026-03-15",
+        "price": 391.20001220703125
+      },
+      {
+        "date": "2026-03-16",
+        "price": 395.55999755859375
+      },
+      {
+        "date": "2026-03-17",
+        "price": 399.2699890136719
+      },
+      {
+        "date": "2026-03-18",
+        "price": 392.7799987792969
+      },
+      {
+        "date": "2026-03-19",
+        "price": 380.29998779296875
+      },
+      {
+        "date": "2026-03-20",
+        "price": 367.9599914550781
+      },
+      {
+        "date": "2026-03-21",
+        "price": 367.9599914550781
+      },
+      {
+        "date": "2026-03-22",
+        "price": 367.9599914550781
+      },
+      {
+        "date": "2026-03-23",
+        "price": 380.8500061035156
+      },
+      {
+        "date": "2026-03-24",
+        "price": 383.0299987792969
+      },
+      {
+        "date": "2026-03-25",
+        "price": 385.95001220703125
+      },
+      {
+        "date": "2026-03-26",
+        "price": 372.1099853515625
+      },
+      {
+        "date": "2026-03-27",
+        "price": 361.8299865722656
+      },
+      {
+        "date": "2026-03-28",
+        "price": 361.8299865722656
+      },
+      {
+        "date": "2026-03-29",
+        "price": 361.8299865722656
+      },
+      {
+        "date": "2026-03-30",
+        "price": 355.2799987792969
+      },
+      {
+        "date": "2026-03-31",
+        "price": 371.75
+      },
+      {
+        "date": "2026-04-01",
+        "price": 381.260009765625
+      },
+      {
+        "date": "2026-04-02",
+        "price": 360.5899963378906
+      },
+      {
+        "date": "2026-04-03",
+        "price": 360.5899963378906
+      },
+      {
+        "date": "2026-04-04",
+        "price": 360.5899963378906
+      },
+      {
+        "date": "2026-04-05",
+        "price": 360.5899963378906
+      },
+      {
+        "date": "2026-04-06",
+        "price": 352.82000732421875
+      },
+      {
+        "date": "2026-04-07",
+        "price": 346.6499938964844
+      },
+      {
+        "date": "2026-04-08",
+        "price": 343.25
+      },
+      {
+        "date": "2026-04-09",
+        "price": 345.6199951171875
+      },
+      {
+        "date": "2026-04-10",
+        "price": 348.95001220703125
+      },
+      {
+        "date": "2026-04-11",
+        "price": 348.95001220703125
+      },
+      {
+        "date": "2026-04-12",
+        "price": 348.95001220703125
+      },
+      {
+        "date": "2026-04-13",
+        "price": 352.4200134277344
+      },
+      {
+        "date": "2026-04-14",
+        "price": 364.20001220703125
+      },
+      {
+        "date": "2026-04-15",
+        "price": 391.95001220703125
+      },
+      {
+        "date": "2026-04-16",
+        "price": 388.8999938964844
+      },
+      {
+        "date": "2026-04-17",
+        "price": 400.6199951171875
+      }
+    ]
+  }
+}
