@@ -9,20 +9,9 @@ import numpy as np
 import pandas as pd
 import yaml
 
+from src.utils import load_config
+
 LOGGER = logging.getLogger(__name__)
-
-
-def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the YAML configuration file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
-    with config_path.open("r", encoding="utf-8") as file_obj:
-        return yaml.safe_load(file_obj)
 
 
 def generate_targets_with_dynamic_threshold(

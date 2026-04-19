@@ -8,25 +8,14 @@ from typing import Any
 import numpy as np
 import pandas as pd
 import yaml
+
+from src.utils import load_config
 from xgboost import XGBClassifier
 
 LOGGER = logging.getLogger(__name__)
 
 LABEL_TO_CLASS = {-1: 0, 0: 1, 1: 2}
 CLASS_TO_LABEL = {class_id: label for label, class_id in LABEL_TO_CLASS.items()}
-
-
-def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the YAML config.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
-    with config_path.open("r", encoding="utf-8") as file_obj:
-        return yaml.safe_load(file_obj)
 
 
 def _encode_targets(raw_targets: np.ndarray) -> np.ndarray:

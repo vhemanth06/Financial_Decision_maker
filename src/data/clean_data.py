@@ -9,37 +9,9 @@ import numpy as np
 import pandas as pd
 import yaml
 
+from src.utils import load_config, _resolve_first_column
+
 LOGGER = logging.getLogger(__name__)
-
-
-def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the configuration file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
-    with config_path.open("r", encoding="utf-8") as file_obj:
-        return yaml.safe_load(file_obj)
-
-
-def _resolve_first_column(frame: pd.DataFrame, candidates: Iterable[str]) -> Optional[str]:
-    """Find the first available column from a list of candidates.
-
-    Args:
-        frame: Dataframe to inspect.
-        candidates: Ordered list of expected column names.
-
-    Returns:
-        Matching column name when found; otherwise None.
-    """
-    existing_columns = set(frame.columns)
-    for candidate in candidates:
-        if candidate in existing_columns:
-            return candidate
-    return None
 
 
 def _coerce_optional_array_text(value: Any) -> str:
@@ -89,49 +61,6 @@ def _normalize_text(series: pd.Series) -> pd.Series:
     )
 
 
-def _safe_series(frame: pd.DataFrame, column_name: str, default: Any = "") -> pd.Series:
-    """Return an existing column or a default-filled series with aligned index.
-
-    Args:
-        frame: Dataframe providing shape and index.
-        column_name: Candidate column name.
-        default: Scalar fallback value.
-
-    Returns:
-        Existing series when available, else a default series.
-    """
-    if column_name in frame.columns:
-        return frame[column_name]
-    return pd.Series([default] * len(frame), index=frame.index)
-
-
-def _map_momentum(value: Any, momentum_mapping: dict[str, int]) -> int:
-    """Map raw momentum category values into numeric states.
-
-    Args:
-        value: Raw categorical momentum value.
-        momentum_mapping: Mapping from category to integer state.
-
-    Returns:
-        Encoded momentum integer.
-    """
-    if isinstance(value, (int, np.integer)):
-        return int(value)
-
-    if isinstance(value, (float, np.floating)):
-        if np.isnan(value):
-            return momentum_mapping.get("missing", 0)
-        return int(value)
-
-    if value is None:
-        return momentum_mapping.get("missing", 0)
-
-    mapped = momentum_mapping.get(str(value).strip().lower())
-    if mapped is None:
-        return momentum_mapping.get("missing", 0)
-    return mapped
-
-
 def _prepare_asset_frame(frame: pd.DataFrame, asset: str, config: dict[str, Any]) -> pd.DataFrame:
     """Normalize a single asset dataframe into a consistent schema.
 
@@ -176,18 +105,23 @@ def _prepare_asset_frame(frame: pd.DataFrame, asset: str, config: dict[str, Any]
     cleaned[normalized_date_column] = pd.to_datetime(cleaned[date_column], errors="coerce", utc=True)
     cleaned[normalized_date_column] = cleaned[normalized_date_column].dt.tz_localize(None)
 
-    cleaned[price_column] = pd.to_numeric(_safe_series(cleaned, price_column, np.nan), errors="coerce")
-    cleaned[normalized_momentum_column] = _safe_series(cleaned, momentum_column, np.nan).apply(
-        lambda value: _map_momentum(value, momentum_mapping)
-    )
+    # News and Price are essential. If missing, this will fail or produce NaNs for filtering later.
+    cleaned[price_column] = pd.to_numeric(cleaned[price_column], errors="coerce")
+    
+    # Simple momentum mapping
+    def map_mom(val):
+        if val is None or (isinstance(val, float) and np.isnan(val)):
+            return momentum_mapping.get("missing", 0)
+        m = momentum_mapping.get(str(val).strip().lower())
+        return m if m is not None else momentum_mapping.get("missing", 0)
 
-    base_news = _normalize_text(_safe_series(cleaned, news_column, ""))
-    tenk_text = _safe_series(cleaned, tenk_column, "").apply(_coerce_optional_array_text)
-    tenq_text = _safe_series(cleaned, tenq_column, "").apply(_coerce_optional_array_text)
+    cleaned[normalized_momentum_column] = cleaned[momentum_column].apply(map_mom)
 
-    tenk_text = _normalize_text(tenk_text)
-    tenq_text = _normalize_text(tenq_text)
+    base_news = cleaned[news_column].fillna("").astype(str)
+    tenk_text = (cleaned[tenk_column] if tenk_column in cleaned.columns else pd.Series([""] * len(cleaned))).apply(_coerce_optional_array_text)
+    tenq_text = (cleaned[tenq_column] if tenq_column in cleaned.columns else pd.Series([""] * len(cleaned))).apply(_coerce_optional_array_text)
 
+    # Perform one-pass normalization at the end
     cleaned[normalized_text_column] = _normalize_text(base_news + " " + tenk_text + " " + tenq_text)
 
     return cleaned

@@ -11,6 +11,7 @@ import pandas as pd
 import torch
 import yaml
 
+from src.utils import load_config
 from src.data.clean_data import build_consolidated_dataframe
 from src.data.fetch_assets import fetch_assets
 from src.evaluation.cross_val import build_cpcv_from_config
@@ -37,19 +38,6 @@ def configure_logging() -> None:
         level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
     )
-
-
-def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to config file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
-    with config_path.open("r", encoding="utf-8") as file_obj:
-        return yaml.safe_load(file_obj)
 
 
 def set_global_seed(config: dict[str, Any]) -> None:

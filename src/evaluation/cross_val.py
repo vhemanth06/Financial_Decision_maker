@@ -10,6 +10,8 @@ from typing import Any, Iterator, Sequence
 import numpy as np
 import yaml
 
+from src.utils import load_config
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -107,19 +109,6 @@ class CombinatorialPurgedCV:
                 continue
 
             yield np.sort(train_indices), np.sort(test_indices)
-
-
-def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the YAML config file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
-    with config_path.open("r", encoding="utf-8") as file_obj:
-        return yaml.safe_load(file_obj)
 
 
 def build_cpcv_from_config(config: dict[str, Any]) -> CombinatorialPurgedCV:

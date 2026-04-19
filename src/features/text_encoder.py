@@ -10,24 +10,13 @@ import numpy as np
 import pandas as pd
 import torch
 import yaml
+
+from src.utils import load_config
 from sklearn.decomposition import PCA
 from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 
 LOGGER = logging.getLogger(__name__)
-
-
-def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the YAML config file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
-    with config_path.open("r", encoding="utf-8") as file_obj:
-        return yaml.safe_load(file_obj)
 
 
 def _resolve_device(device_name: str) -> torch.device:
