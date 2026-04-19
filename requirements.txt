@@ -10,10 +10,10 @@ datasets>=2.20.0,<3.0
 pyarrow>=17.0.0,<20.0
 
 # ML / DL (CPU-only)
-torch==2.2.2+cpu
-torchvision==0.17.2+cpu
-torchaudio==2.2.2+cpu
---extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2
+torchvision==0.17.2
+torchaudio==2.2.2
+--index-url https://download.pytorch.org/whl/cpu
 
 # Keep transformers on the 4.x line for torch 2.2 compatibility.
 transformers>=4.42.0,<5.0
