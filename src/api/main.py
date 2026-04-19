@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from ast import Load
 import json
 import logging
 import os
@@ -26,6 +25,16 @@ app = FastAPI(title="CLEF-2026 Trading Agent API", version="1.0.0")
 DEFAULT_FALLBACK_DECISION = "HOLD"
 DEFAULT_FALLBACK_RATIONALE = "System fallback triggered due to data anomaly."
 ACTION_TO_DECISION = {-1: "SELL", 0: "HOLD", 1: "BUY"}
+DEFAULT_SEMANTIC_POSITIVE_ANCHORS = [
+    "strong growth and upside with bullish momentum and positive demand",
+    "earnings beat estimates, guidance upgrade, and improving outlook",
+    "rally supported by inflows and strong market sentiment",
+]
+DEFAULT_SEMANTIC_NEGATIVE_ANCHORS = [
+    "earnings miss, downgrade, and weakening outlook with downside risk",
+    "selloff driven by outflows, decline, and bearish momentum",
+    "lawsuit and risk concerns causing pressure and drop in sentiment",
+]
 
 #Single historical price point used to reconstruct rolling indicators
 class HistoryPricePoint(BaseModel):
@@ -100,11 +109,16 @@ class InferenceService:
         self.finbert_cfg = self.config["finbert"]
         self.xgb_cfg = self.config["xgboost"]
         self.rationale_cfg = self.config["rationale"]
+        self.semantic_cfg = self.rationale_cfg.get("semantic_scoring", {})
         self._price_history_window = int(self.features_cfg.get("api_price_history_window", 60))
         self._price_history: dict[str, deque[float]] = defaultdict(
             lambda: deque(maxlen=self._price_history_window)
         )
         self._did_log_tabular_adjustment = False
+        self._semantic_enabled = bool(self.semantic_cfg.get("enabled", False))
+        self._semantic_neutral_margin = float(self.semantic_cfg.get("neutral_margin", 0.02))
+        self._semantic_positive_centroid: Optional[np.ndarray] = None
+        self._semantic_negative_centroid: Optional[np.ndarray] = None
 
         self._momentum_mapping = self.dataset_cfg["momentum_mapping"]
         self.runtime_policy = self._load_runtime_policy()
@@ -121,6 +135,8 @@ class InferenceService:
         if self.finbert_device.type == "cuda" and self.finbert_cfg["use_fp16_on_cuda"]:
             self.finbert_model = self.finbert_model.half()
         self.finbert_model.eval()
+
+        self._initialize_semantic_scoring()
 
     #Load optional calibrated decision policy from disk.
     def _load_runtime_policy(self) -> dict[str, float]:
@@ -325,6 +341,97 @@ class InferenceService:
         text = " ".join(text.split())
         return text
 
+    def _initialize_semantic_scoring(self) -> None:
+        """Build semantic sentiment centroids from configured anchor phrases."""
+        if not self._semantic_enabled:
+            return
+
+        positive_anchors = [
+            str(item).strip()
+            for item in self.semantic_cfg.get("positive_anchors", DEFAULT_SEMANTIC_POSITIVE_ANCHORS)
+            if str(item).strip()
+        ]
+        negative_anchors = [
+            str(item).strip()
+            for item in self.semantic_cfg.get("negative_anchors", DEFAULT_SEMANTIC_NEGATIVE_ANCHORS)
+            if str(item).strip()
+        ]
+
+        if not positive_anchors or not negative_anchors:
+            LOGGER.warning("Semantic scoring disabled because anchor lists are empty.")
+            self._semantic_enabled = False
+            return
+
+        positive_embeddings = self._encode_text_dense(positive_anchors)
+        negative_embeddings = self._encode_text_dense(negative_anchors)
+        if positive_embeddings.size == 0 or negative_embeddings.size == 0:
+            LOGGER.warning("Semantic scoring disabled because anchor embeddings could not be created.")
+            self._semantic_enabled = False
+            return
+
+        self._semantic_positive_centroid = np.mean(positive_embeddings, axis=0).astype(np.float32)
+        self._semantic_negative_centroid = np.mean(negative_embeddings, axis=0).astype(np.float32)
+        LOGGER.info(
+            "Semantic scoring enabled with %d positive and %d negative anchors.",
+            len(positive_anchors),
+            len(negative_anchors),
+        )
+
+    def _encode_text_dense(self, texts: list[str]) -> np.ndarray:
+        """Encode text rows with FinBERT and return dense pooled embeddings."""
+        if not texts:
+            return np.empty((0, 0), dtype=np.float32)
+
+        encoded = self.finbert_tokenizer(
+            texts,
+            padding=True,
+            truncation=True,
+            max_length=self.finbert_cfg["max_length"],
+            return_tensors="pt",
+        )
+        encoded = {name: tensor.to(self.finbert_device) for name, tensor in encoded.items()}
+
+        with torch.no_grad():
+            outputs = self.finbert_model(**encoded)
+            if getattr(outputs, "pooler_output", None) is not None:
+                pooled = outputs.pooler_output
+            else:
+                pooled = outputs.last_hidden_state[:, 0, :]
+
+        return pooled.detach().float().cpu().numpy().astype(np.float32)
+
+    @staticmethod
+    def _cosine_similarity(vec_a: np.ndarray, vec_b: np.ndarray) -> float:
+        """Compute cosine similarity with safe zero-norm fallback."""
+        denom = float(np.linalg.norm(vec_a) * np.linalg.norm(vec_b))
+        if denom == 0.0:
+            return 0.0
+        return float(np.dot(vec_a, vec_b) / denom)
+
+    def _compute_semantic_news_sentiment(
+        self,
+        dense_embedding: np.ndarray,
+    ) -> tuple[Optional[str], Optional[float]]:
+        """Infer sentiment from embedding proximity to positive/negative centroids."""
+        if (
+            not self._semantic_enabled
+            or self._semantic_positive_centroid is None
+            or self._semantic_negative_centroid is None
+            or dense_embedding.size == 0
+        ):
+            return None, None
+
+        sample_vector = dense_embedding[0].astype(np.float32)
+        positive_similarity = self._cosine_similarity(sample_vector, self._semantic_positive_centroid)
+        negative_similarity = self._cosine_similarity(sample_vector, self._semantic_negative_centroid)
+        semantic_score = float(positive_similarity - negative_similarity)
+
+        if semantic_score > self._semantic_neutral_margin:
+            return "supportive", semantic_score
+        if semantic_score < -self._semantic_neutral_margin:
+            return "cautious", semantic_score
+        return "mixed", semantic_score
+
     # Compute technical indicators and build tabular feature array.
     @staticmethod
     def _compute_rsi(prices: list[float], window: int = 14) -> float:
@@ -413,27 +520,11 @@ class InferenceService:
         return np.array([tabular_values], dtype=np.float32)
 
     # Encode one text record with FinBERT and reduce with PCA to match model input space.
-    def _encode_single_text(self, text: str) -> np.ndarray:
+    def _encode_single_text(self, text: str) -> tuple[np.ndarray, np.ndarray]:
         
-        encoded = self.finbert_tokenizer(
-            [text],
-            padding=True,
-            truncation=True,
-            max_length=self.finbert_cfg["max_length"],
-            return_tensors="pt",
-        )
-        encoded = {name: tensor.to(self.finbert_device) for name, tensor in encoded.items()}
-
-        with torch.no_grad():
-            outputs = self.finbert_model(**encoded)
-            if getattr(outputs, "pooler_output", None) is not None:
-                pooled = outputs.pooler_output
-            else:
-                pooled = outputs.last_hidden_state[:, 0, :]
-
-        dense_embedding = pooled.detach().float().cpu().numpy().astype(np.float32)
+        dense_embedding = self._encode_text_dense([text])
         reduced_embedding = self.pca_model.transform(dense_embedding).astype(np.float32)
-        return reduced_embedding
+        return reduced_embedding, dense_embedding
 
     # Main function to run full inference.
     def predict(self, payload: PredictRequest) -> tuple[str, str]:
@@ -446,7 +537,7 @@ class InferenceService:
         combined_text = self._build_text(payload, asset_key)
         momentum_numeric = self._to_momentum_numeric(momentum_raw)
 
-        reduced_embedding = self._encode_single_text(combined_text)
+        reduced_embedding, dense_embedding = self._encode_single_text(combined_text)
         tabular = self._build_tabular_features(
             asset_key=asset_key,
             price_value=price_value,
@@ -491,6 +582,7 @@ class InferenceService:
         action_value = int(actions[0])
         decision = ACTION_TO_DECISION.get(action_value, DEFAULT_FALLBACK_DECISION)
         confidence = float(confidences[0])
+        semantic_news_sentiment, semantic_score = self._compute_semantic_news_sentiment(dense_embedding)
 
         rationale = generate_rationale(
             decision=decision,
@@ -504,6 +596,8 @@ class InferenceService:
             confidence_high=float(self.rationale_cfg["confidence_high"]),
             positive_keywords=[str(item) for item in self.rationale_cfg["positive_keywords"]],
             negative_keywords=[str(item) for item in self.rationale_cfg["negative_keywords"]],
+            semantic_news_sentiment=semantic_news_sentiment,
+            semantic_score=semantic_score,
         )
 
         return decision, rationale

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from typing import Optional
 
 
 def _truncate_to_word_limit(text: str, max_words: int) -> str:
@@ -120,6 +121,8 @@ def generate_rationale(
     confidence_high: float,
     positive_keywords: list[str],
     negative_keywords: list[str],
+    semantic_news_sentiment: Optional[str] = None,
+    semantic_score: Optional[float] = None,
 ) -> str:
     """Build a deterministic rationale without any generative language model.
 
@@ -142,21 +145,28 @@ def generate_rationale(
     Returns:
         Deterministic rationale string with a strict word limit.
     """
-    normalized_decision = str(decision).strip().upper()
-    if normalized_decision not in {"BUY", "HOLD", "SELL"}:
-        normalized_decision = "HOLD"
-
     bounded_text = str(day_text or "").replace("\n", " ").strip()[:context_char_limit]
 
     momentum_phrase = _resolve_momentum_phrase(momentum_numeric)
-    news_phrase = _resolve_news_phrase(bounded_text, positive_keywords, negative_keywords)
+    news_sentiment = (
+        str(semantic_news_sentiment).strip().lower()
+        if semantic_news_sentiment is not None and str(semantic_news_sentiment).strip()
+        else _resolve_news_phrase(bounded_text, positive_keywords, negative_keywords)
+    )
     confidence_phrase = _resolve_confidence_phrase(confidence, confidence_low, confidence_high)
-    risk_phrase = _resolve_risk_phrase(normalized_decision)
+
+    # Keep signature compatibility while emitting a compact rationale report format.
+    _ = decision, asset
+
+    if semantic_score is not None:
+        sentiment_component = f"{news_sentiment} ({float(semantic_score):+.3f})"
+    else:
+        sentiment_component = news_sentiment
 
     rationale = (
-        f"{asset} is set to {normalized_decision} because momentum is {momentum_phrase} "
-        f"and news tone is {news_phrase}. Model confidence is {confidence_phrase} "
-        f"({confidence:.2f}), while risk remains that {risk_phrase}."
+        f"confidence={confidence:.2f} ({confidence_phrase}); "
+        f"momentum={momentum_phrase}; "
+        f"news_sentiment={sentiment_component}."
     )
 
     cleaned = " ".join(rationale.split())

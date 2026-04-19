@@ -55,6 +55,22 @@ def set_global_seed(config: dict[str, Any]) -> None:
     torch.backends.cudnn.benchmark = False
 
 
+# Save per-asset BUY/HOLD/SELL bar plots from freshly generated labels.
+def save_action_distribution_plots(config_path: Path, config: dict[str, Any]) -> list[Path]:
+    plots_cfg = config.get("plots", {})
+    output_dir = Path(str(plots_cfg.get("action_distribution_dir", "plots/action_distribution")))
+
+    from scripts.plot_training_action_distribution import plot_action_distributions
+
+    saved_paths = plot_action_distributions(config_path=config_path, output_dir=output_dir)
+    LOGGER.info(
+        "Saved %d action distribution plot(s) to %s",
+        len(saved_paths),
+        output_dir,
+    )
+    return saved_paths
+
+
 # Run CPCV Sharpe evaluation.
 def run_cpcv_evaluation(config: dict[str, Any]) -> dict[str, float]:
     paths_cfg = config["paths"]
@@ -90,6 +106,8 @@ def run_cpcv_evaluation(config: dict[str, Any]) -> dict[str, float]:
     splitter = build_cpcv_from_config(config)
     sharpe_scores_by_threshold: dict[float, list[float]] = {threshold: [] for threshold in threshold_grid}
     hold_share_by_threshold: dict[float, list[float]] = {threshold: [] for threshold in threshold_grid}
+    mean_net_return_by_threshold: dict[float, list[float]] = {threshold: [] for threshold in threshold_grid}
+    turnover_by_threshold: dict[float, list[float]] = {threshold: [] for threshold in threshold_grid}
 
     for split_id, (train_idx, test_idx) in enumerate(splitter.split(all_features), start=1):
         split_seed = int(config["seed"]["xgboost"]) + split_id
@@ -118,6 +136,8 @@ def run_cpcv_evaluation(config: dict[str, Any]) -> dict[str, float]:
 
             sharpe_scores_by_threshold[threshold].append(float(metrics["sharpe_ratio"]))
             hold_share_by_threshold[threshold].append(float(np.mean(actions == 0)) if len(actions) else 0.0)
+            mean_net_return_by_threshold[threshold].append(float(metrics["mean_net_return"]))
+            turnover_by_threshold[threshold].append(float(metrics["turnover"]))
 
     non_empty_thresholds = {
         threshold: values
@@ -131,7 +151,12 @@ def run_cpcv_evaluation(config: dict[str, Any]) -> dict[str, float]:
             "num_splits": 0.0,
             "best_confidence_threshold": float(xgb_cfg["confidence_threshold"]),
             "best_mean_sharpe": 0.0,
+            "positive_split_ratio": 0.0,
+            "median_split_sharpe": 0.0,
+            "mean_net_return": 0.0,
+            "mean_turnover": 0.0,
             "mean_hold_share": 0.0,
+            "robust_score": 0.0,
         }
 
     mean_sharpe_by_threshold = {
@@ -146,25 +171,48 @@ def run_cpcv_evaluation(config: dict[str, Any]) -> dict[str, float]:
     for threshold in threshold_grid:
         threshold_sharpes = sharpe_scores_by_threshold.get(threshold, [])
         threshold_holds = hold_share_by_threshold.get(threshold, [])
+        threshold_net_returns = mean_net_return_by_threshold.get(threshold, [])
+        threshold_turnovers = turnover_by_threshold.get(threshold, [])
         if not threshold_sharpes:
             continue
         LOGGER.info(
-            "CPCV threshold %.3f | mean_sharpe=%.6f mean_hold_share=%.4f splits=%d",
+            "CPCV threshold %.3f | mean_sharpe=%.6f mean_net_return=%.6f mean_turnover=%.4f "
+            "mean_hold_share=%.4f splits=%d",
             threshold,
             float(np.mean(threshold_sharpes)),
+            float(np.mean(threshold_net_returns)) if threshold_net_returns else 0.0,
+            float(np.mean(threshold_turnovers)) if threshold_turnovers else 0.0,
             float(np.mean(threshold_holds)) if threshold_holds else 0.0,
             len(threshold_sharpes),
         )
 
     selected_sharpes = sharpe_scores_by_threshold[best_threshold]
+    selected_sharpe_array = np.asarray(selected_sharpes, dtype=np.float64)
+    selected_net_returns = mean_net_return_by_threshold[best_threshold]
+    selected_turnovers = turnover_by_threshold[best_threshold]
     selected_holds = hold_share_by_threshold[best_threshold]
+
+    mean_sharpe = float(np.mean(selected_sharpe_array))
+    std_sharpe = float(np.std(selected_sharpe_array, ddof=1)) if len(selected_sharpe_array) > 1 else 0.0
+    positive_split_ratio = float(np.mean(selected_sharpe_array > 0.0)) if len(selected_sharpe_array) else 0.0
+    median_split_sharpe = float(np.median(selected_sharpe_array)) if len(selected_sharpe_array) else 0.0
+    mean_net_return = float(np.mean(selected_net_returns)) if selected_net_returns else 0.0
+    mean_turnover = float(np.mean(selected_turnovers)) if selected_turnovers else 0.0
+    mean_hold_share = float(np.mean(selected_holds)) if selected_holds else 0.0
+    robust_score = float(mean_sharpe - 0.5 * std_sharpe)
+
     return {
-        "mean_sharpe": float(np.mean(selected_sharpes)),
-        "std_sharpe": float(np.std(selected_sharpes, ddof=1)) if len(selected_sharpes) > 1 else 0.0,
+        "mean_sharpe": mean_sharpe,
+        "std_sharpe": std_sharpe,
         "num_splits": float(len(selected_sharpes)),
         "best_confidence_threshold": float(best_threshold),
         "best_mean_sharpe": float(mean_sharpe_by_threshold[best_threshold]),
-        "mean_hold_share": float(np.mean(selected_holds)) if selected_holds else 0.0,
+        "positive_split_ratio": positive_split_ratio,
+        "median_split_sharpe": median_split_sharpe,
+        "mean_net_return": mean_net_return,
+        "mean_turnover": mean_turnover,
+        "mean_hold_share": mean_hold_share,
+        "robust_score": robust_score,
     }
 
 
@@ -184,7 +232,12 @@ def save_xgb_policy(config: dict[str, Any], cpcv_summary: dict[str, float]) -> N
         "hold_probability_cap": float(xgb_cfg.get("hold_probability_cap", 1.0)),
         "sharpe_ratio": float(cpcv_summary.get("mean_sharpe", 0.0)),
         "sharpe_std": float(cpcv_summary.get("std_sharpe", 0.0)),
+        "positive_split_ratio": float(cpcv_summary.get("positive_split_ratio", 0.0)),
+        "median_split_sharpe": float(cpcv_summary.get("median_split_sharpe", 0.0)),
+        "mean_net_return": float(cpcv_summary.get("mean_net_return", 0.0)),
+        "mean_turnover": float(cpcv_summary.get("mean_turnover", 0.0)),
         "mean_hold_share": float(cpcv_summary.get("mean_hold_share", 0.0)),
+        "robust_score": float(cpcv_summary.get("robust_score", 0.0)),
         "objective": float(cpcv_summary.get("best_mean_sharpe", 0.0)),
     }
 
@@ -206,6 +259,9 @@ def run_pipeline(config_path: Path) -> None:
 
     LOGGER.info("Phase 3.1 | Generating dynamic-threshold labels")
     build_labeled_dataset(config)
+
+    LOGGER.info("Phase 3.1b | Saving action distribution bar plots")
+    save_action_distribution_plots(config_path=config_path, config=config)
 
     LOGGER.info("Phase 3.2 | Generating FinBERT embeddings and PCA projections")
     build_finbert_pca_embeddings(config)
@@ -229,6 +285,16 @@ def run_pipeline(config_path: Path) -> None:
 
     LOGGER.info("Phase 4 | Training final XGBoost model on full training set")
     train_and_save_xgboost(config)
+
+    LOGGER.info("Post-training KPI summary")
+    LOGGER.info("Mean CPCV Sharpe: %.6f", cpcv_summary["mean_sharpe"])
+    LOGGER.info("Std CPCV Sharpe: %.6f", cpcv_summary["std_sharpe"])
+    LOGGER.info("Positive split ratio: %.4f", cpcv_summary["positive_split_ratio"])
+    LOGGER.info("Median split Sharpe: %.6f", cpcv_summary["median_split_sharpe"])
+    LOGGER.info("Mean net return: %.6f", cpcv_summary["mean_net_return"])
+    LOGGER.info("Turnover: %.6f", cpcv_summary["mean_turnover"])
+    LOGGER.info("HOLD share: %.6f", cpcv_summary["mean_hold_share"])
+    LOGGER.info("Robust score (Mean Sharpe - 0.5 * Std Sharpe): %.6f", cpcv_summary["robust_score"])
 
     LOGGER.info("Pipeline completed successfully.")
 

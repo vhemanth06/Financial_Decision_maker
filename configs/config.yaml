@@ -70,11 +70,11 @@ features:
   target_column: "target"
 
 labels:
-  horizon_days: 5
-  rolling_window: 20
-  rolling_min_periods: 5
-  vol_multiplier_buy: 1.25
-  vol_multiplier_sell: 1.0
+  horizon_days: 7
+  rolling_window: 30
+  rolling_min_periods: 10
+  vol_multiplier_buy: 0.9
+  vol_multiplier_sell: 1.1
   threshold_grid: [0.5, 0.75, 1.0, 1.25, 1.5]
 
 finbert:
@@ -103,7 +103,7 @@ xgboost:
   confidence_threshold_grid: [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75]
   directional_edge_threshold: 0.0
   hold_probability_cap: 1.0
-  use_class_balancing: true
+  use_class_balancing: false
 
 rationale:
   max_words: 50
@@ -112,6 +112,17 @@ rationale:
   confidence_high: 0.60
   positive_keywords: ["beat", "growth", "upside", "inflow", "rally", "upgrade", "bullish", "surge", "record"]
   negative_keywords: ["miss", "downgrade", "outflow", "lawsuit", "risk", "decline", "bearish", "drop", "selloff"]
+  semantic_scoring:
+    enabled: true
+    neutral_margin: 0.
+    positive_anchors:
+      - "strong growth and upside with bullish momentum and positive demand"
+      - "earnings beat estimates, guidance upgrade, and improving outlook"
+      - "rally supported by inflows and strong market sentiment"
+    negative_anchors:
+      - "earnings miss, downgrade, and weakening outlook with downside risk"
+      - "selloff driven by outflows, decline, and bearish momentum"
+      - "lawsuit and risk concerns causing pressure and drop in sentiment"
 
 cpcv:
   n_splits: 6
@@ -127,3 +138,6 @@ api:
   port: 8000
   fallback_decision: "HOLD"
   fallback_rationale: "System fallback triggered due to data anomaly."
+
+plots:
+  action_distribution_dir: "plots/action_distribution"

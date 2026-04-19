@@ -1,9 +1,14 @@
 {
-  "confidence_threshold": 0.35,
+  "confidence_threshold": 0.5,
   "directional_edge_threshold": 0.0,
   "hold_probability_cap": 1.0,
-  "sharpe_ratio": 0.4767471725960772,
-  "sharpe_std": 0.6474013169147691,
-  "mean_hold_share": 0.8251302083333333,
-  "objective": 0.4767471725960772
+  "sharpe_ratio": 0.758879784375259,
+  "sharpe_std": 1.0182343239232017,
+  "positive_split_ratio": 0.8,
+  "median_split_sharpe": 0.7884180920827668,
+  "mean_net_return": 0.001257027082707888,
+  "mean_turnover": 0.17786509495743288,
+  "mean_hold_share": 0.8647058823529413,
+  "robust_score": 0.2497626224136582,
+  "objective": 0.758879784375259
 }
