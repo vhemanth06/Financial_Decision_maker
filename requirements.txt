@@ -10,6 +10,7 @@ pyyaml>=6.0.1,<7.0
 tqdm>=4.66.5,<5.0
 datasets>=2.20.0,<3.0
 pyarrow>=17.0.0,<20.0
+python-dotenv>=1.0.1,<2.0
 
 # ML / DL runtime needed by API inference.
 # Keep this lean for Render free tier: only torch is required.

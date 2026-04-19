@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import torch
 import yaml
+from dotenv import load_dotenv
 
 from src.data.clean_data import build_consolidated_dataframe
 from src.data.fetch_assets import fetch_assets
@@ -25,6 +26,8 @@ from src.models.quant_xgboost import (
 )
 
 LOGGER = logging.getLogger(__name__)
+
+load_dotenv()
 
 
 def configure_logging() -> None:

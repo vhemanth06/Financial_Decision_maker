@@ -10,6 +10,7 @@ import numpy as np
 import torch
 import yaml
 from fastapi import FastAPI
+from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from transformers import AutoModel, AutoTokenizer
 from xgboost import XGBClassifier
@@ -19,6 +20,8 @@ from src.models.rationale_rules import generate_rationale
 
 LOGGER = logging.getLogger(__name__)
 app = FastAPI(title="CLEF-2026 Trading Agent API", version="1.0.0")
+
+load_dotenv()
 
 DEFAULT_FALLBACK_DECISION = "HOLD"
 DEFAULT_FALLBACK_RATIONALE = "System fallback triggered due to data anomaly."

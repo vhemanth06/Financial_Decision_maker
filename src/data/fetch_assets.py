@@ -11,8 +11,11 @@ import numpy as np
 import pandas as pd
 import yaml
 from datasets import load_dataset
+from dotenv import load_dotenv
 
 LOGGER = logging.getLogger(__name__)
+
+load_dotenv()
 
 
 def load_config(config_path: Path) -> dict[str, Any]:

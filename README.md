@@ -26,6 +26,8 @@ If the CLEF dataset is private, set your Hugging Face token first:
 export HF_TOKEN=your_huggingface_token
 ```
 
+You can also place `HF_TOKEN=...` in a local `.env` file at the repo root.
+
 ```bash
 cd clef2026_trading_agent
 python main_pipeline.py --config configs/config.yaml
