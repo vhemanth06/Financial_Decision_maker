@@ -23,8 +23,8 @@ from scripts.build_post_payload import (
 from src.api.main import InferenceService, PredictRequest
 
 
+# Prepare and normalize source frame.
 def _prepare_frame(frame: pd.DataFrame, config: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, str]]:
-    """Prepare and normalize source frame for candidate search."""
     dataset_cfg = config["dataset"]
 
     asset_col = _resolve_column(
@@ -86,6 +86,7 @@ def _prepare_frame(frame: pd.DataFrame, config: dict[str, Any]) -> tuple[pd.Data
     return prepared, columns
 
 
+# Build nested API payload for one row.
 def _build_payload_from_row(
     prepared: pd.DataFrame,
     row_index: int,
@@ -93,7 +94,6 @@ def _build_payload_from_row(
     config: dict[str, Any],
     history_window: int,
 ) -> dict[str, Any]:
-    """Build nested API payload for one specific row index."""
     asset_col = columns["asset"]
     date_col = columns["date"]
     price_col = columns["price"]

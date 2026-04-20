@@ -13,47 +13,19 @@ LOGGER = logging.getLogger(__name__)
 
 
 def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the configuration file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
 
 def _resolve_first_column(frame: pd.DataFrame, candidates: Iterable[str]) -> Optional[str]:
-    """Find the first available column from a list of candidates.
-
-    Args:
-        frame: Dataframe to inspect.
-        candidates: Ordered list of expected column names.
-
-    Returns:
-        Matching column name when found; otherwise None.
-    """
     existing_columns = set(frame.columns)
     for candidate in candidates:
         if candidate in existing_columns:
             return candidate
     return None
 
-
+# COnvert optional array-like filing fields into a single plain string.
 def _coerce_optional_array_text(value: Any) -> str:
-    """Convert optional array-like filing fields into a single plain string.
-
-    This function exists to neutralize schema drift across CLEF asset files where
-    10-K and 10-Q columns can be null, list-like, or scalar text values.
-
-    Args:
-        value: Raw field value from the dataframe.
-
-    Returns:
-        Normalized text string.
-    """
     if value is None:
         return ""
 
@@ -71,16 +43,9 @@ def _coerce_optional_array_text(value: Any) -> str:
 
     return str(value)
 
-
+# Normalize whitespace and missing values for text fields.
 def _normalize_text(series: pd.Series) -> pd.Series:
-    """Normalize whitespace and missing values for text fields.
-
-    Args:
-        series: Input text-like series.
-
-    Returns:
-        Cleaned text series.
-    """
+    
     return (
         series.fillna("")
         .astype(str)
@@ -88,33 +53,16 @@ def _normalize_text(series: pd.Series) -> pd.Series:
         .str.strip()
     )
 
-
+# Return an existing column or a default-filled series with aligned index.
 def _safe_series(frame: pd.DataFrame, column_name: str, default: Any = "") -> pd.Series:
-    """Return an existing column or a default-filled series with aligned index.
-
-    Args:
-        frame: Dataframe providing shape and index.
-        column_name: Candidate column name.
-        default: Scalar fallback value.
-
-    Returns:
-        Existing series when available, else a default series.
-    """
+    
     if column_name in frame.columns:
         return frame[column_name]
     return pd.Series([default] * len(frame), index=frame.index)
 
-
+# Map raw momentum values into normalized integer states based on config mapping.
 def _map_momentum(value: Any, momentum_mapping: dict[str, int]) -> int:
-    """Map raw momentum category values into numeric states.
-
-    Args:
-        value: Raw categorical momentum value.
-        momentum_mapping: Mapping from category to integer state.
-
-    Returns:
-        Encoded momentum integer.
-    """
+    
     if isinstance(value, (int, np.integer)):
         return int(value)
 
@@ -131,21 +79,9 @@ def _map_momentum(value: Any, momentum_mapping: dict[str, int]) -> int:
         return momentum_mapping.get("missing", 0)
     return mapped
 
-
+# Normalize a single asset dataframe into a consistent schema.
 def _prepare_asset_frame(frame: pd.DataFrame, asset: str, config: dict[str, Any]) -> pd.DataFrame:
-    """Normalize a single asset dataframe into a consistent schema.
-
-    Args:
-        frame: Raw asset dataframe.
-        asset: Asset ticker symbol.
-        config: Full project configuration.
-
-    Returns:
-        Schema-normalized dataframe for one asset.
-
-    Raises:
-        ValueError: If a usable date column cannot be resolved.
-    """
+    
     dataset_cfg = config["dataset"]
 
     date_column = _resolve_first_column(frame, dataset_cfg["date_column_candidates"])
@@ -192,19 +128,9 @@ def _prepare_asset_frame(frame: pd.DataFrame, asset: str, config: dict[str, Any]
 
     return cleaned
 
-
+# Load consolidated data, generate dynamic-threshold labels, and persist output.
 def build_consolidated_dataframe(config: dict[str, Any]) -> pd.DataFrame:
-    """Build and save a consolidated chronological dataset across all configured assets.
-
-    Args:
-        config: Full project configuration.
-
-    Returns:
-        Consolidated dataframe sorted by date and asset.
-
-    Raises:
-        RuntimeError: If no raw asset files are available.
-    """
+    
     paths_cfg = config["paths"]
     dataset_cfg = config["dataset"]
 
@@ -241,14 +167,12 @@ def build_consolidated_dataframe(config: dict[str, Any]) -> pd.DataFrame:
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments for standalone execution."""
     parser = argparse.ArgumentParser(description="Clean and consolidate raw CLEF asset data.")
     parser.add_argument("--config", required=True, type=Path, help="Path to configs/config.yaml")
     return parser.parse_args()
 
 
 def main() -> None:
-    """Run cleaning and consolidation as a standalone script."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
     args = parse_args()
     config = load_config(args.config)

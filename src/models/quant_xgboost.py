@@ -17,30 +17,11 @@ CLASS_TO_LABEL = {class_id: label for label, class_id in LABEL_TO_CLASS.items()}
 
 
 def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the YAML config.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
-
+# Encode targets from {-1,0,1} to XGBoost class IDs {0,1,2}.
 def _encode_targets(raw_targets: np.ndarray) -> np.ndarray:
-    """Encode targets from {-1,0,1} to XGBoost class IDs {0,1,2}.
-
-    Args:
-        raw_targets: Raw target array.
-
-    Returns:
-        Encoded class IDs.
-
-    Raises:
-        ValueError: If unseen class labels are detected.
-    """
     unique_labels = set(np.unique(raw_targets).tolist())
     unsupported = unique_labels.difference(LABEL_TO_CLASS.keys())
     if unsupported:
@@ -49,27 +30,14 @@ def _encode_targets(raw_targets: np.ndarray) -> np.ndarray:
     return np.array([LABEL_TO_CLASS[int(label)] for label in raw_targets], dtype=np.int64)
 
 
+# Decode XGBoost class IDs {0,1,2} back to {-1,0,1} actions.
 def _decode_classes(class_ids: np.ndarray) -> np.ndarray:
-    """Decode XGBoost class IDs {0,1,2} back to {-1,0,1} actions.
-
-    Args:
-        class_ids: Predicted class ID array.
-
-    Returns:
-        Decoded action labels.
-    """
     return np.array([CLASS_TO_LABEL[int(class_id)] for class_id in class_ids], dtype=np.int8)
 
 
+# Compute inverse-frequency class weights for balanced training.
 def _compute_balanced_sample_weights(targets_encoded: np.ndarray) -> np.ndarray:
-    """Compute inverse-frequency class weights for multiclass training.
 
-    Args:
-        targets_encoded: Encoded target array with class IDs.
-
-    Returns:
-        Per-sample weight vector.
-    """
     if len(targets_encoded) == 0:
         return np.array([], dtype=np.float32)
 
@@ -86,9 +54,8 @@ def _compute_balanced_sample_weights(targets_encoded: np.ndarray) -> np.ndarray:
     }
     return np.array([class_to_weight[int(class_id)] for class_id in targets_encoded], dtype=np.float32)
 
-
+#  Calculate RSI, moving average ratio, and rolling volatility as technical indicators.
 def _calculate_rsi(series: pd.Series, window: int = 14) -> pd.Series:
-    """Calculate RSI."""
     delta = series.diff()
     gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
@@ -97,34 +64,23 @@ def _calculate_rsi(series: pd.Series, window: int = 14) -> pd.Series:
 
 
 def _calculate_ma_ratio(series: pd.Series, short_window: int = 10, long_window: int = 30) -> pd.Series:
-    """Calculate moving average ratio."""
     short_ma = series.rolling(window=short_window).mean()
     long_ma = series.rolling(window=long_window).mean()
     return short_ma / long_ma
 
 
 def _calculate_rolling_vol(series: pd.Series, window: int = 20) -> pd.Series:
-    """Calculate rolling volatility of returns."""
     return series.pct_change().rolling(window=window).std()
 
 
+# Convert class probabilities into {-1,0,1} actions with policy guards.
 def actions_from_probabilities(
     probabilities: np.ndarray,
     confidence_threshold: float,
     directional_edge_threshold: float = 0.0,
     hold_probability_cap: float = 1.0,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Convert class probabilities into {-1,0,1} actions with policy guards.
-
-    Args:
-        probabilities: Predicted class probabilities with shape (n_samples, 3).
-        confidence_threshold: Minimum max class probability to allow directional action.
-        directional_edge_threshold: Minimum absolute edge between BUY and SELL probabilities.
-        hold_probability_cap: If HOLD probability exceeds this cap, action is forced to HOLD.
-
-    Returns:
-        Tuple of (actions, best_probabilities).
-    """
+    
     if probabilities.ndim != 2:
         raise ValueError("probabilities must be a 2D array")
     if probabilities.shape[1] != len(LABEL_TO_CLASS):
@@ -153,26 +109,14 @@ def actions_from_probabilities(
     return actions, best_probabilities
 
 
+# Construct feature matrix from tabular and text embeddings.
 def build_feature_matrix(
     frame: pd.DataFrame,
     reduced_embeddings: np.ndarray,
     tabular_columns: list[str],
     target_column: str,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Construct late-fusion matrix from tabular and PCA text embeddings.
-
-    Args:
-        frame: Labeled dataframe.
-        reduced_embeddings: PCA-compressed FinBERT matrix.
-        tabular_columns: Ordered list of tabular feature columns.
-        target_column: Target column name.
-
-    Returns:
-        A tuple of (train_features, train_targets_encoded, valid_mask).
-
-    Raises:
-        ValueError: If row counts between dataframe and embeddings do not match.
-    """
+    
     if len(frame) != reduced_embeddings.shape[0]:
         raise ValueError(
             "Row mismatch between dataframe and embeddings: "
@@ -180,12 +124,11 @@ def build_feature_matrix(
             "Regenerate text embeddings to ensure artifacts are aligned with the current labeled dataset."
         )
 
-    # --- Start: Technical Indicator Generation ---
+    # Technical Indicator Generation 
     grouped_prices = frame.groupby("asset")["prices"]
     frame["rsi_14d"] = grouped_prices.transform(_calculate_rsi)
     frame["ma_ratio_10_30"] = grouped_prices.transform(_calculate_ma_ratio)
     frame["vol_20d"] = grouped_prices.transform(_calculate_rolling_vol)
-    # --- End: Technical Indicator Generation ---
 
     tabular = (
         frame[tabular_columns]
@@ -206,23 +149,14 @@ def build_feature_matrix(
     return train_features, train_targets_encoded, valid_mask.to_numpy()
 
 
+# Train XGBoost classifier with optional class balancing and return the model.
 def train_xgb_classifier(
     features: np.ndarray,
     targets_encoded: np.ndarray,
     xgb_cfg: dict[str, Any],
     seed: int,
 ) -> XGBClassifier:
-    """Train a multiclass XGBoost classifier for action prediction.
-
-    Args:
-        features: Late-fusion feature matrix.
-        targets_encoded: Encoded class IDs.
-        xgb_cfg: XGBoost configuration dictionary.
-        seed: Random seed for deterministic training.
-
-    Returns:
-        Trained XGBClassifier instance.
-    """
+    
     model = XGBClassifier(
         objective=xgb_cfg["objective"],
         num_class=xgb_cfg["num_class"],
@@ -249,6 +183,7 @@ def train_xgb_classifier(
     return model
 
 
+# Predict actions with confidence thresholding and return both actions and their probabilities.
 def predict_actions_and_confidence(
     model: XGBClassifier,
     features: np.ndarray,
@@ -256,18 +191,7 @@ def predict_actions_and_confidence(
     directional_edge_threshold: float = 0.0,
     hold_probability_cap: float = 1.0,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Predict actions and expose confidence after HOLD thresholding.
-
-    Args:
-        model: Trained XGBoost classifier.
-        features: Feature matrix for inference.
-        confidence_threshold: Min class probability required to trust a trade.
-        directional_edge_threshold: Min BUY-vs-SELL probability edge for directional actions.
-        hold_probability_cap: Force HOLD when HOLD probability is above this cap.
-
-    Returns:
-        Tuple of (actions, best_probabilities) where actions are in {-1, 0, 1}.
-    """
+    
     probabilities = model.predict_proba(features)
     return actions_from_probabilities(
         probabilities=probabilities,
@@ -276,7 +200,7 @@ def predict_actions_and_confidence(
         hold_probability_cap=hold_probability_cap,
     )
 
-
+# Predict discrete actions with confidence-threshold HOLD override and return only actions.
 def predict_actions_with_threshold(
     model: XGBClassifier,
     features: np.ndarray,
@@ -284,18 +208,7 @@ def predict_actions_with_threshold(
     directional_edge_threshold: float = 0.0,
     hold_probability_cap: float = 1.0,
 ) -> np.ndarray:
-    """Predict discrete actions with confidence-threshold HOLD override.
-
-    Args:
-        model: Trained XGBoost classifier.
-        features: Feature matrix for inference.
-        confidence_threshold: Min class probability required to trust a trade.
-        directional_edge_threshold: Min BUY-vs-SELL probability edge for directional actions.
-        hold_probability_cap: Force HOLD when HOLD probability is above this cap.
-
-    Returns:
-        Array of decoded actions in {-1, 0, 1}.
-    """
+    
     actions, _ = predict_actions_and_confidence(
         model=model,
         features=features,
@@ -305,16 +218,9 @@ def predict_actions_with_threshold(
     )
     return actions
 
-
+# Train XGBoost model from labeled dataset and save the trained model to disk.
 def train_and_save_xgboost(config: dict[str, Any]) -> XGBClassifier:
-    """Train XGBoost from configured artifacts and save model to disk.
-
-    Args:
-        config: Full project configuration.
-
-    Returns:
-        Trained XGBClassifier.
-    """
+    
     paths_cfg = config["paths"]
     features_cfg = config["features"]
     xgb_cfg = config["xgboost"]
@@ -360,14 +266,12 @@ def train_and_save_xgboost(config: dict[str, Any]) -> XGBClassifier:
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments for standalone execution."""
     parser = argparse.ArgumentParser(description="Train late-fusion XGBoost model.")
     parser.add_argument("--config", required=True, type=Path, help="Path to configs/config.yaml")
     return parser.parse_args()
 
 
 def main() -> None:
-    """Run XGBoost model training as a standalone script."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
     args = parse_args()
     config = load_config(args.config)

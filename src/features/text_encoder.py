@@ -16,34 +16,19 @@ from transformers import AutoModel, AutoTokenizer
 
 LOGGER = logging.getLogger(__name__)
 
-
+# Load project configuration from the config.yaml file.
 def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the YAML config file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
-
+# Resolve runtime device from config while supporting auto mode.
 def _resolve_device(device_name: str) -> torch.device:
-    """Resolve runtime device from config while supporting auto mode.
-
-    Args:
-        device_name: Requested device string from config.
-
-    Returns:
-        A torch.device instance.
-    """
+    
     if device_name == "auto":
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
     return torch.device(device_name)
 
-
+# Encode texts into FinBERT embeddings with memory-aware batching and optional FP16 on CUDA.
 def encode_texts_with_finbert(
     texts: Sequence[str],
     model_name: str,
@@ -52,19 +37,7 @@ def encode_texts_with_finbert(
     device_name: str,
     use_fp16_on_cuda: bool,
 ) -> np.ndarray:
-    """Encode text into FinBERT dense vectors using memory-aware batched inference.
-
-    Args:
-        texts: Iterable of text snippets to encode.
-        model_name: Hugging Face model name.
-        batch_size: Number of samples per inference batch.
-        max_length: Tokenization truncation length.
-        device_name: Device string from config.
-        use_fp16_on_cuda: Whether to switch model to FP16 on CUDA for lower VRAM use.
-
-    Returns:
-        Matrix of sentence embeddings with shape (n_samples, 768).
-    """
+   
     if len(texts) == 0:
         return np.zeros((0, 0), dtype=np.float32)
 
@@ -102,7 +75,7 @@ def encode_texts_with_finbert(
 
     return np.vstack(embeddings).astype(np.float32)
 
-
+# Fit PCA on FinBERT embeddings, save both the PCA model and reduced matrix, and return the reduced embeddings.
 def fit_pca_and_save(
     embeddings: np.ndarray,
     n_components: int,
@@ -110,21 +83,7 @@ def fit_pca_and_save(
     pca_model_path: Path,
     reduced_embeddings_path: Path,
 ) -> np.ndarray:
-    """Fit PCA on FinBERT vectors and persist both model and reduced matrix.
-
-    Args:
-        embeddings: Full FinBERT embedding matrix.
-        n_components: Requested number of principal components.
-        seed: Random seed for reproducibility.
-        pca_model_path: Output path for serialized PCA model.
-        reduced_embeddings_path: Output path for reduced embedding matrix.
-
-    Returns:
-        PCA-compressed embedding matrix.
-
-    Raises:
-        ValueError: If the embedding matrix is empty.
-    """
+    
     if embeddings.size == 0:
         raise ValueError("Cannot fit PCA on an empty embedding matrix.")
 
@@ -147,16 +106,9 @@ def fit_pca_and_save(
     np.save(reduced_embeddings_path, reduced_embeddings)
     return reduced_embeddings
 
-
+# Main function to build FinBERT embeddings and PCA projections from labeled dataset, and persist results to disk.
 def build_finbert_pca_embeddings(config: dict[str, Any]) -> np.ndarray:
-    """Generate and persist FinBERT and PCA embeddings from labeled data.
-
-    Args:
-        config: Full project configuration dictionary.
-
-    Returns:
-        PCA-compressed embedding matrix.
-    """
+    
     paths_cfg = config["paths"]
     features_cfg = config["features"]
     finbert_cfg = config["finbert"]
@@ -200,14 +152,12 @@ def build_finbert_pca_embeddings(config: dict[str, Any]) -> np.ndarray:
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments for standalone execution."""
     parser = argparse.ArgumentParser(description="Generate FinBERT embeddings and PCA projections.")
     parser.add_argument("--config", required=True, type=Path, help="Path to configs/config.yaml")
     return parser.parse_args()
 
 
 def main() -> None:
-    """Run text encoding and PCA projection as a standalone script."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
     args = parse_args()
     config = load_config(args.config)

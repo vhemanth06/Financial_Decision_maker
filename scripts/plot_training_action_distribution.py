@@ -16,14 +16,14 @@ PLOT_ORDER = ["BUY", "HOLD", "SELL"]
 PLOT_COLORS = ["#2e7d32", "#6d6d6d", "#c62828"]
 
 
+# Load YAML configuration.
 def load_config(config_path: Path) -> dict[str, Any]:
-    """Load YAML configuration."""
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
 
+# Load and normalize training labels for plotting.
 def _prepare_training_labels(config: dict[str, Any]) -> tuple[pd.DataFrame, str, str]:
-    """Load labeled training data and normalize target labels for plotting."""
     paths_cfg = config["paths"]
     dataset_cfg = config["dataset"]
     features_cfg = config["features"]
@@ -48,8 +48,8 @@ def _prepare_training_labels(config: dict[str, Any]) -> tuple[pd.DataFrame, str,
     return prepared, asset_col, target_col
 
 
+# Return BUY/HOLD/SELL count series for one asset.
 def _build_counts_for_asset(prepared: pd.DataFrame, asset_col: str, asset: str) -> pd.Series:
-    """Return BUY/HOLD/SELL count series for one asset in stable plot order."""
     counts = (
         prepared.loc[prepared[asset_col] == asset, "decision"]
         .value_counts()
@@ -58,8 +58,8 @@ def _build_counts_for_asset(prepared: pd.DataFrame, asset_col: str, asset: str) 
     return counts
 
 
+# Plot and save one bar chart for a single asset.
 def _plot_counts(asset: str, counts: pd.Series, output_path: Path) -> None:
-    """Plot and save one bar chart for a single asset distribution."""
     total = int(counts.sum())
     percentages = counts / total * 100 if total > 0 else counts
 
@@ -85,8 +85,8 @@ def _plot_counts(asset: str, counts: pd.Series, output_path: Path) -> None:
     plt.close()
 
 
+# Generate per-asset BUY/HOLD/SELL distribution plots.
 def plot_action_distributions(config_path: Path, output_dir: Path) -> list[Path]:
-    """Generate per-asset BUY/HOLD/SELL distribution plots for training data."""
     config = load_config(config_path)
     prepared, asset_col, _target_col = _prepare_training_labels(config)
 
@@ -104,8 +104,8 @@ def plot_action_distributions(config_path: Path, output_dir: Path) -> list[Path]
     return saved_paths
 
 
+# Parse CLI args.
 def parse_args() -> argparse.Namespace:
-    """Parse CLI args."""
     parser = argparse.ArgumentParser(
         description="Plot per-asset BUY/HOLD/SELL frequency distributions from labeled training data."
     )
@@ -124,8 +124,8 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+# CLI entrypoint for plotting training action distributions.
 def main() -> None:
-    """CLI entrypoint for plotting training action distributions."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
     args = parse_args()
 

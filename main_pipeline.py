@@ -28,37 +28,22 @@ from src.models.quant_xgboost import (
 LOGGER = logging.getLogger(__name__)
 
 
+# Configure root logger for the pipeline.
 def configure_logging() -> None:
-    """Configure root logger for the end-to-end pipeline.
-
-    Centralized logging is required so every phase emits traceable diagnostics during
-    long-running training jobs.
-    """
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
     )
 
 
+# Load project configuration from YAML.
 def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to config file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
 
+# Set reproducibility seeds.
 def set_global_seed(config: dict[str, Any]) -> None:
-    """Set reproducibility seeds across Python, NumPy, and PyTorch.
-
-    Args:
-        config: Full project configuration dictionary.
-    """
     random.seed(int(config["seed"]["numpy"]))
     np.random.seed(int(config["seed"]["numpy"]))
 
@@ -70,15 +55,8 @@ def set_global_seed(config: dict[str, Any]) -> None:
     torch.backends.cudnn.benchmark = False
 
 
+# Run CPCV Sharpe evaluation.
 def run_cpcv_evaluation(config: dict[str, Any]) -> dict[str, float]:
-    """Run CPCV Sharpe evaluation using fee-aware returns.
-
-    Args:
-        config: Full project configuration dictionary.
-
-    Returns:
-        Summary dictionary with mean/std Sharpe and split count.
-    """
     paths_cfg = config["paths"]
     features_cfg = config["features"]
     xgb_cfg = config["xgboost"]
@@ -190,13 +168,8 @@ def run_cpcv_evaluation(config: dict[str, Any]) -> dict[str, float]:
     }
 
 
+# Persist calibrated inference policy values.
 def save_xgb_policy(config: dict[str, Any], cpcv_summary: dict[str, float]) -> None:
-    """Persist calibrated inference policy values from CPCV evaluation.
-
-    Args:
-        config: Full project configuration dictionary.
-        cpcv_summary: CPCV summary dictionary returned by run_cpcv_evaluation.
-    """
     paths_cfg = config["paths"]
     xgb_cfg = config["xgboost"]
 
@@ -220,12 +193,8 @@ def save_xgb_policy(config: dict[str, Any], cpcv_summary: dict[str, float]) -> N
     LOGGER.info("Saved XGBoost policy -> %s", policy_path)
 
 
+# Execute end-to-end training and artifact generation in strict phase order.
 def run_pipeline(config_path: Path) -> None:
-    """Execute end-to-end training and artifact generation in strict phase order.
-
-    Args:
-        config_path: Path to configs/config.yaml.
-    """
     config = load_config(config_path)
     set_global_seed(config)
 
@@ -265,14 +234,12 @@ def run_pipeline(config_path: Path) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments for pipeline execution."""
     parser = argparse.ArgumentParser(description="Run CLEF-2026 trading-agent training pipeline.")
     parser.add_argument("--config", required=True, type=Path, help="Path to configs/config.yaml")
     return parser.parse_args()
 
 
 def main() -> None:
-    """Entry point for end-to-end training pipeline."""
     configure_logging()
     args = parse_args()
     run_pipeline(args.config)

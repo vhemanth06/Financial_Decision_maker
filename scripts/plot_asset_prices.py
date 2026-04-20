@@ -12,14 +12,14 @@ import yaml
 LOGGER = logging.getLogger(__name__)
 
 
+# Load YAML configuration file.
 def load_config(config_path: Path) -> dict:
-    """Load YAML configuration file."""
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
 
+# Return the first existing column from ordered candidates.
 def resolve_first_column(frame: pd.DataFrame, candidates: Iterable[str]) -> Optional[str]:
-    """Return the first existing column from ordered candidates."""
     existing = set(frame.columns)
     for candidate in candidates:
         if candidate in existing:
@@ -27,13 +27,13 @@ def resolve_first_column(frame: pd.DataFrame, candidates: Iterable[str]) -> Opti
     return None
 
 
+# Create and save one price-vs-date plot for a single asset.
 def plot_asset_price(
     parquet_path: Path,
     output_dir: Path,
     date_candidates: list[str],
     price_column: str,
 ) -> Optional[Path]:
-    """Create and save one price-vs-date plot for a single asset parquet file."""
     asset = parquet_path.stem.upper()
     frame = pd.read_parquet(parquet_path)
 
@@ -77,8 +77,8 @@ def plot_asset_price(
     return output_path
 
 
+# Parse CLI arguments.
 def parse_args() -> argparse.Namespace:
-    """Parse CLI arguments."""
     parser = argparse.ArgumentParser(description="Plot price vs date for each asset parquet file.")
     parser.add_argument(
         "--config",
@@ -101,8 +101,8 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+# Generate and save one plot per asset parquet.
 def main() -> None:
-    """Generate and save one plot per asset parquet in the input directory."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
     args = parse_args()
 

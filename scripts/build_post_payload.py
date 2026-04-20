@@ -12,14 +12,14 @@ import pandas as pd
 import yaml
 
 
+# Load YAML config file.
 def load_config(config_path: Path) -> dict[str, Any]:
-    """Load YAML config file."""
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
 
+# Normalize optional text-like values into a single string or None.
 def _coerce_optional_text(value: Any) -> Optional[str]:
-    """Normalize optional text-like values into a single string or None."""
     if value is None:
         return None
 
@@ -80,16 +80,16 @@ def _coerce_optional_text(value: Any) -> Optional[str]:
     return text if text else None
 
 
+# Format datetime-like value to YYYY-MM-DD.
 def _format_date(value: Any) -> str:
-    """Format datetime-like value to YYYY-MM-DD."""
     timestamp = pd.to_datetime(value, errors="coerce")
     if pd.isna(timestamp):
         raise ValueError(f"Unable to parse date value: {value}")
     return timestamp.strftime("%Y-%m-%d")
 
 
+# Choose input parquet path.
 def _pick_source_path(config: dict[str, Any], source_override: Optional[Path]) -> Path:
-    """Choose input parquet path, preferring explicit override then consolidated data."""
     if source_override is not None:
         return source_override
 
@@ -105,8 +105,8 @@ def _pick_source_path(config: dict[str, Any], source_override: Optional[Path]) -
     raise FileNotFoundError("No local parquet source found.")
 
 
+# Resolve HF token from config or environment variable.
 def _resolve_hf_token(dataset_cfg: dict[str, Any]) -> Optional[str]:
-    """Resolve HF token from config literal or configured environment variable."""
     configured_token = str(dataset_cfg.get("hf_token", "")).strip()
     if configured_token:
         return configured_token
@@ -116,8 +116,8 @@ def _resolve_hf_token(dataset_cfg: dict[str, Any]) -> Optional[str]:
     return env_token or None
 
 
+# Load and combine asset frames from HF parquet locations.
 def _load_frame_from_hf(config: dict[str, Any]) -> pd.DataFrame:
-    """Load and combine asset frames from configured HF parquet locations."""
     dataset_cfg = config["dataset"]
     assets = [str(asset).upper() for asset in config["assets"]["tickers"]]
 
@@ -170,8 +170,8 @@ def _load_frame_from_hf(config: dict[str, Any]) -> pd.DataFrame:
     return pd.concat(combined_frames, axis=0, ignore_index=True)
 
 
+# Load source dataframe from local or HF parquet.
 def load_source_frame(config: dict[str, Any], source_override: Optional[Path]) -> pd.DataFrame:
-    """Load source dataframe from local parquet, falling back to HF parquet."""
     try:
         source_path = _pick_source_path(config, source_override)
         return pd.read_parquet(source_path)
@@ -179,16 +179,16 @@ def load_source_frame(config: dict[str, Any], source_override: Optional[Path]) -
         return _load_frame_from_hf(config)
 
 
+# Return the first existing column from candidates.
 def _resolve_column(frame: pd.DataFrame, candidates: list[str]) -> str:
-    """Return the first existing column from ordered candidates."""
     for candidate in candidates:
         if candidate in frame.columns:
             return candidate
     raise KeyError(f"None of the candidate columns exist: {candidates}")
 
 
+# Keep momentum as string when possible.
 def _normalize_momentum(value: Any, config: dict[str, Any]) -> Any:
-    """Keep momentum as string when possible; map numeric values back to labels if known."""
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return "missing"
 
@@ -205,13 +205,13 @@ def _normalize_momentum(value: Any, config: dict[str, Any]) -> Any:
     return str(value)
 
 
+# Create nested API payload from the latest datapoint.
 def build_payload(
     frame: pd.DataFrame,
     config: dict[str, Any],
     asset_override: Optional[str],
     history_window: int,
 ) -> dict[str, Any]:
-    """Create nested API payload from the latest datapoint."""
     dataset_cfg = config["dataset"]
 
     asset_col = _resolve_column(
@@ -296,8 +296,8 @@ def build_payload(
     return payload
 
 
+# CLI argument parser.
 def parse_args() -> argparse.Namespace:
-    """CLI argument parser."""
     parser = argparse.ArgumentParser(
         description="Build a nested FastAPI /predict payload from the latest datapoint."
     )
@@ -334,8 +334,8 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+# Read latest datapoint, convert to API payload, and write JSON.
 def main() -> None:
-    """Read latest datapoint, convert to nested API payload, and write JSON file."""
     args = parse_args()
     config = load_config(args.config)
 

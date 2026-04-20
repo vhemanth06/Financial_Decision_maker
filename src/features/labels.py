@@ -13,18 +13,11 @@ LOGGER = logging.getLogger(__name__)
 
 
 def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the YAML configuration file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
 
+# Create return labels using a rolling volatility-dependent threshold.
 def generate_targets_with_dynamic_threshold(
     frame: pd.DataFrame,
     asset_column: str,
@@ -37,26 +30,6 @@ def generate_targets_with_dynamic_threshold(
     vol_multiplier_buy: float,
     vol_multiplier_sell: float,
 ) -> pd.DataFrame:
-    """Create return labels using a rolling volatility-dependent threshold.
-
-    This function builds training targets aligned with market regime changes, which is
-    more useful for Sharpe optimization than fixed thresholds under non-stationary volatility.
-
-    Args:
-        frame: Input dataframe containing at least asset/date/price columns.
-        asset_column: Name of the asset identifier column.
-        date_column: Name of the chronological ordering column.
-        price_column: Name of the price column.
-        target_column: Destination column for discrete class targets.
-        horizon_days: Forecast horizon in days.
-        rolling_window: Rolling window size for volatility estimation.
-        rolling_min_periods: Minimum observations for rolling statistics.
-        vol_multiplier_buy: Multiplier for buy signal threshold.
-        vol_multiplier_sell: Multiplier for sell signal threshold.
-
-    Returns:
-        Dataframe with added columns: future_price_diff, future_return, tau, target.
-    """
     labeled = frame.copy()
     labeled = labeled.sort_values(by=[asset_column, date_column]).reset_index(drop=True)
     labeled[price_column] = pd.to_numeric(labeled[price_column], errors="coerce")
@@ -92,15 +65,8 @@ def generate_targets_with_dynamic_threshold(
     return labeled
 
 
+# Load consolidated data, generate dynamic-threshold labels, and persist output.
 def build_labeled_dataset(config: dict[str, Any]) -> pd.DataFrame:
-    """Load consolidated data, generate dynamic-threshold labels, and persist output.
-
-    Args:
-        config: Full project configuration dictionary.
-
-    Returns:
-        Labeled dataframe.
-    """
     paths_cfg = config["paths"]
     dataset_cfg = config["dataset"]
     labels_cfg = config["labels"]
@@ -129,15 +95,14 @@ def build_labeled_dataset(config: dict[str, Any]) -> pd.DataFrame:
     return labeled_frame
 
 
+# Parse command-line arguments for standalone execution.
 def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments for standalone execution."""
     parser = argparse.ArgumentParser(description="Generate CLEF labels from consolidated data.")
     parser.add_argument("--config", required=True, type=Path, help="Path to configs/config.yaml")
     return parser.parse_args()
 
 
 def main() -> None:
-    """Run label generation as a standalone script."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
     args = parse_args()
     config = load_config(args.config)

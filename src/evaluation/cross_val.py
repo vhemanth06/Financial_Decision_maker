@@ -13,20 +13,15 @@ import yaml
 LOGGER = logging.getLogger(__name__)
 
 
+# Generate CPCV splits with index-based purging around test windows.
 @dataclass(frozen=True)
 class CombinatorialPurgedCV:
-    """Generate CPCV splits with index-based purging around test windows.
-
-    CPCV is used to reduce leakage from nearby samples when features include rolling
-    statistics, making validation outcomes more reliable for financial time series.
-    """
-
     n_splits: int
     n_test_splits: int
     purge_window: int
 
+    # Validate split hyperparameters.
     def __post_init__(self) -> None:
-        """Validate split hyperparameters at object construction."""
         if self.n_splits <= 1:
             raise ValueError("n_splits must be greater than 1")
         if self.n_test_splits < 1:
@@ -36,39 +31,23 @@ class CombinatorialPurgedCV:
         if self.purge_window < 0:
             raise ValueError("purge_window must be non-negative")
 
+    # Return the number of combinatorial train/test configurations.
     def get_n_splits(self) -> int:
-        """Return the number of combinatorial train/test configurations."""
         combo_count = len(list(combinations(range(self.n_splits), self.n_test_splits)))
         return combo_count
 
+    # Split chronological sample indices into contiguous folds.
     def _build_fold_indices(self, n_samples: int) -> list[np.ndarray]:
-        """Split chronological sample indices into contiguous folds.
-
-        Args:
-            n_samples: Number of rows in the dataset.
-
-        Returns:
-            List of contiguous index arrays.
-        """
         full_index = np.arange(n_samples, dtype=np.int64)
         return [np.array(part, dtype=np.int64) for part in np.array_split(full_index, self.n_splits)]
 
+    # Remove train rows that are too close to any test row.
     def _purge_indices(
         self,
         train_indices: np.ndarray,
         test_indices: np.ndarray,
         n_samples: int,
     ) -> np.ndarray:
-        """Remove train rows that are too close to any test row.
-
-        Args:
-            train_indices: Candidate training indices.
-            test_indices: Test indices.
-            n_samples: Total sample count.
-
-        Returns:
-            Purged training indices.
-        """
         if self.purge_window == 0:
             return train_indices
 
@@ -80,15 +59,8 @@ class CombinatorialPurgedCV:
 
         return train_indices[~exclusion_mask[train_indices]]
 
+    # Yield purged CPCV train/test index pairs.
     def split(self, data: Sequence[Any]) -> Iterator[tuple[np.ndarray, np.ndarray]]:
-        """Yield purged CPCV train/test index pairs.
-
-        Args:
-            data: Sequence-like dataset used only for length inference.
-
-        Yields:
-            Tuples of (train_indices, test_indices).
-        """
         n_samples = len(data)
         fold_indices = self._build_fold_indices(n_samples)
 
@@ -109,28 +81,14 @@ class CombinatorialPurgedCV:
             yield np.sort(train_indices), np.sort(test_indices)
 
 
+# Load project configuration from YAML.
 def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Path to the YAML config file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
 
+# Instantiate CombinatorialPurgedCV using config values.
 def build_cpcv_from_config(config: dict[str, Any]) -> CombinatorialPurgedCV:
-    """Instantiate CombinatorialPurgedCV using config values.
-
-    Args:
-        config: Full project configuration dictionary.
-
-    Returns:
-        Configured CombinatorialPurgedCV object.
-    """
     cpcv_cfg = config["cpcv"]
     return CombinatorialPurgedCV(
         n_splits=cpcv_cfg["n_splits"],
@@ -139,16 +97,16 @@ def build_cpcv_from_config(config: dict[str, Any]) -> CombinatorialPurgedCV:
     )
 
 
+# Parse command-line arguments for standalone validation.
 def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments for standalone validation."""
     parser = argparse.ArgumentParser(description="Inspect CPCV split counts.")
     parser.add_argument("--config", required=True, type=Path, help="Path to configs/config.yaml")
     parser.add_argument("--sample-count", required=True, type=int, help="Number of samples")
     return parser.parse_args()
 
 
+# Log the number of generated CPCV splits for a sample size.
 def main() -> None:
-    """Log the number of generated CPCV splits for a sample size."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
     args = parse_args()
     config = load_config(args.config)

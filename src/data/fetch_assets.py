@@ -16,44 +16,21 @@ LOGGER = logging.getLogger(__name__)
 
 
 def load_config(config_path: Path) -> dict[str, Any]:
-    """Load project configuration from YAML.
-
-    Args:
-        config_path: Absolute or relative path to the YAML configuration file.
-
-    Returns:
-        Parsed configuration dictionary.
-    """
     with config_path.open("r", encoding="utf-8") as file_obj:
         return yaml.safe_load(file_obj)
 
-
+# Return the first existing column from ordered candidates.
 def _resolve_first_column(frame: pd.DataFrame, candidates: Iterable[str]) -> Optional[str]:
-    """Resolve the first existing column name from a candidate list.
-
-    Args:
-        frame: Input dataframe to inspect.
-        candidates: Ordered list of potential column names.
-
-    Returns:
-        The first matching column name, or None when no match exists.
-    """
+    
     existing_columns = set(frame.columns)
     for candidate in candidates:
         if candidate in existing_columns:
             return candidate
     return None
 
-
+# Resolve Hugging Face auth token from config or environment variable.
 def _resolve_hf_token(dataset_cfg: dict[str, Any]) -> Optional[str]:
-    """Resolve Hugging Face auth token from config literal or environment variable.
-
-    Args:
-        dataset_cfg: Dataset section of project configuration.
-
-    Returns:
-        Token string when available, else None.
-    """
+    
     token_env_var = _sanitize_env_var_name(str(dataset_cfg.get("hf_token_env_var", "HF_TOKEN")).strip())
 
     configured_token = str(dataset_cfg.get("hf_token", "")).strip()
@@ -66,17 +43,9 @@ def _resolve_hf_token(dataset_cfg: dict[str, Any]) -> Optional[str]:
 
     return None
 
-
+# Detect placeholder token strings that should not be used for auth.
 def _looks_like_token_placeholder(value: str, token_env_var: str) -> bool:
-    """Detect placeholder token strings that should not be used for auth.
-
-    Args:
-        value: Candidate token text.
-        token_env_var: Configured environment variable name.
-
-    Returns:
-        True when value appears to be a placeholder, otherwise False.
-    """
+    
     normalized = value.strip()
     if not normalized:
         return True
@@ -99,38 +68,21 @@ def _looks_like_token_placeholder(value: str, token_env_var: str) -> bool:
 
     return False
 
-
+# Sanitize environment variable name for user-facing hints.
 def _sanitize_env_var_name(candidate: str) -> str:
-    """Return a safe environment variable name or a default fallback.
-
-    Args:
-        candidate: Raw configured environment variable key.
-
-    Returns:
-        Sanitized env var name suitable for user-facing hints.
-    """
+    
     if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", candidate):
         return candidate
     return "HF_TOKEN"
 
-
+# Load Hugging Face dataset with token compatibility.
 def _load_hf_dataset(
     dataset_name: str,
     split_name: str,
     token: Optional[str],
     subset_name: Optional[str] = None,
 ) -> Any:
-    """Load Hugging Face dataset with token compatibility across library versions.
-
-    Args:
-        dataset_name: Dataset repository identifier.
-        split_name: Split name to load.
-        token: Optional authentication token.
-        subset_name: Optional subset/configuration name.
-
-    Returns:
-        Loaded dataset split object.
-    """
+    
     kwargs: dict[str, Any] = {"split": split_name}
     if token:
         kwargs["token"] = token
@@ -148,13 +100,9 @@ def _load_hf_dataset(
             return load_dataset(dataset_name, **legacy_kwargs)
         return load_dataset(dataset_name, subset_name, **legacy_kwargs)
 
-
+# Attempt an explicit Hugging Face login.
 def _try_hf_login(token: Optional[str]) -> None:
-    """Attempt an explicit Hugging Face login for hf:// parquet access.
-
-    Args:
-        token: Optional HF token.
-    """
+    
     if not token:
         return
 
@@ -166,67 +114,36 @@ def _try_hf_login(token: Optional[str]) -> None:
     except Exception as error:  # pragma: no cover - external auth variability
         LOGGER.warning("huggingface_hub login failed; continuing with tokenized access: %s", error)
 
-
+# Build default parquet paths for Hugging Face datasets.
 def _build_default_hf_parquet_paths(assets: list[str]) -> dict[str, str]:
-    """Build default asset->relative parquet path mapping for hf:// reads.
-
-    Args:
-        assets: Configured asset tickers.
-
-    Returns:
-        Mapping from uppercase ticker to relative parquet path.
-    """
+    
     return {
         asset.upper(): f"data/{asset.upper()}-00000-of-00001.parquet"
         for asset in assets
     }
 
-
+# Build storage options for fsspec hf:// access.
 def _build_hf_storage_options(token: Optional[str]) -> dict[str, Any]:
-    """Build storage options for fsspec hf:// access.
-
-    Args:
-        token: Optional authentication token.
-
-    Returns:
-        Storage options dictionary for pandas.read_parquet.
-    """
+    
     if not token:
         return {}
     return {"token": token}
 
-
+# Load one dataframe from hf:// parquet URI.
 def _load_hf_parquet_frame(uri: str, token: Optional[str]) -> pd.DataFrame:
-    """Load one dataframe from hf:// parquet URI.
-
-    Args:
-        uri: Full hf:// parquet URI.
-        token: Optional token used by storage_options.
-
-    Returns:
-        Loaded dataframe.
-    """
+    
     storage_options = _build_hf_storage_options(token)
     if storage_options:
         return pd.read_parquet(uri, storage_options=storage_options)
     return pd.read_parquet(uri)
 
-
+# load per-asset frames using direct hf:// parquet paths.
 def _load_asset_frames_from_hf_parquet(
     dataset_cfg: dict[str, Any],
     assets: list[str],
     token: Optional[str],
 ) -> dict[str, pd.DataFrame]:
-    """Load per-asset frames using direct hf:// parquet paths.
-
-    Args:
-        dataset_cfg: Dataset configuration dictionary.
-        assets: List of configured tickers.
-        token: Optional token for authenticated dataset access.
-
-    Returns:
-        Mapping from ticker to dataframe for successfully loaded assets.
-    """
+    
     repo_id = str(dataset_cfg.get("hf_parquet_repo", dataset_cfg.get("hf_dataset_name", ""))).strip()
     if not repo_id:
         return {}
@@ -347,22 +264,9 @@ def _build_synthetic_raw_files(config: dict[str, Any], raw_dir: Path) -> dict[st
 
     return output_paths
 
-
+# Fetch asset-level CLEF records from Hugging Face and persist per-asset parquet files.
 def fetch_assets(config: dict[str, Any]) -> dict[str, Path]:
-    """Fetch asset-level CLEF records from Hugging Face and persist per-asset parquet files.
-
-    This function supports both unified datasets (all assets in one split) and datasets
-    where each asset is exposed as a subset configuration.
-
-    Args:
-        config: Full project configuration.
-
-    Returns:
-        Mapping from asset ticker to saved parquet path.
-
-    Raises:
-        RuntimeError: If no assets could be downloaded.
-    """
+   
     dataset_cfg = config["dataset"]
     paths_cfg = config["paths"]
     assets = config["assets"]["tickers"]
@@ -473,14 +377,12 @@ def fetch_assets(config: dict[str, Any]) -> dict[str, Path]:
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command-line arguments for standalone execution."""
     parser = argparse.ArgumentParser(description="Download CLEF asset files from Hugging Face.")
     parser.add_argument("--config", required=True, type=Path, help="Path to configs/config.yaml")
     return parser.parse_args()
 
 
 def main() -> None:
-    """Run the asset downloader as a standalone script."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
     args = parse_args()
     config = load_config(args.config)

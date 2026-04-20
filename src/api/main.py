@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from ast import Load
 import json
 import logging
 import os
@@ -26,24 +27,15 @@ DEFAULT_FALLBACK_DECISION = "HOLD"
 DEFAULT_FALLBACK_RATIONALE = "System fallback triggered due to data anomaly."
 ACTION_TO_DECISION = {-1: "SELL", 0: "HOLD", 1: "BUY"}
 
-
+#Single historical price point used to reconstruct rolling indicators
 class HistoryPricePoint(BaseModel):
-    """Single historical price point used to reconstruct rolling indicators."""
 
     date: Optional[str] = None
     price: float
 
 
+#Schema for the input to daily prediction.
 class PredictRequest(BaseModel):
-    """Schema for daily prediction payloads.
-
-    Supports both legacy flat payloads and CLEF nested per-asset payloads such as:
-    - price: {"BTC": 67890.5}
-    - news: {"BTC": ["..."]}
-    - momentum: {"BTC": "bullish"}
-    - 10k / 10q: {"BTC": "..."} or null
-    - history_price: {"BTC": [{"date": "...", "price": ...}, ...]}
-    """
 
     model_config = ConfigDict(
         extra="allow",
@@ -90,22 +82,17 @@ class PredictRequest(BaseModel):
     )
 
 
+ #Prediction response with strict action and short rationale
 class PredictResponse(BaseModel):
-    """Prediction response with strict action and short rationale."""
-
     decision: Literal["BUY", "HOLD", "SELL"]
     rationale: str
 
 
+#Runtime inference service that composes FinBERT, PCA, and XGBoost.
 class InferenceService:
-    """Runtime inference service that composes FinBERT, PCA, XGBoost, and rule-based rationale."""
 
-    def __init__(self, config_path: Path) -> None:
-        """Load all required artifacts for low-latency prediction.
-
-        Args:
-            config_path: Path to the configuration YAML.
-        """
+    #Load all required artifacts for low-latency prediction.
+    def __init__(self, config_path: Path) -> None:        
         self.config = self._load_config(config_path)
         self.paths_cfg = self.config["paths"]
         self.dataset_cfg = self.config["dataset"]
@@ -135,12 +122,8 @@ class InferenceService:
             self.finbert_model = self.finbert_model.half()
         self.finbert_model.eval()
 
+    #Load optional calibrated decision policy from disk.
     def _load_runtime_policy(self) -> dict[str, float]:
-        """Load optional calibrated decision policy from disk.
-
-        Returns:
-            Runtime policy dictionary used at inference.
-        """
         policy = {
             "confidence_threshold": float(self.xgb_cfg["confidence_threshold"]),
             "directional_edge_threshold": float(self.xgb_cfg.get("directional_edge_threshold", 0.0)),
@@ -168,70 +151,39 @@ class InferenceService:
 
         return policy
 
+    # Load YAML configuration file.
     @staticmethod
     def _load_config(config_path: Path) -> dict[str, Any]:
-        """Load YAML configuration file.
-
-        Args:
-            config_path: Config path.
-
-        Returns:
-            Parsed configuration dictionary.
-        """
         with config_path.open("r", encoding="utf-8") as file_obj:
             return yaml.safe_load(file_obj)
 
+    # Resolve runtime device with auto fallback.
     @staticmethod
     def _resolve_device(device_name: str) -> torch.device:
-        """Resolve runtime device with auto fallback.
-
-        Args:
-            device_name: Requested device string.
-
-        Returns:
-            torch.device instance.
-        """
+        
         if device_name == "auto":
             return torch.device("cuda" if torch.cuda.is_available() else "cpu")
         return torch.device(device_name)
 
+    # Load trained XGBoost model from disk.
     @staticmethod
     def _load_xgb_model(model_path: Path) -> XGBClassifier:
-        """Load trained XGBoost model from disk.
-
-        Args:
-            model_path: Serialized model path.
-
-        Returns:
-            Loaded XGBClassifier model.
-        """
+        
         model = XGBClassifier()
         model.load_model(str(model_path))
         return model
 
+    # Load serialized PCA model from disk.
     @staticmethod
     def _load_pca_model(pca_path: Path) -> Any:
-        """Load serialized PCA object from disk.
-
-        Args:
-            pca_path: Path to pickled PCA model.
-
-        Returns:
-            Loaded PCA object.
-        """
+        
         with pca_path.open("rb") as file_obj:
             return pickle.load(file_obj)
 
+    # Normalize and extract asset key from payload with robust fallbacks.
     @staticmethod
     def _coerce_optional_text(value: Any) -> str:
-        """Normalize optional text payload fields.
-
-        Args:
-            value: Optional string or list input.
-
-        Returns:
-            Flattened text.
-        """
+        
         if value is None:
             return ""
         if isinstance(value, dict):
@@ -241,16 +193,17 @@ class InferenceService:
             return " ".join(str(item) for item in value if item is not None)
         return str(value)
 
+
+    # Return first key from a mapping-like payload when available.
     @staticmethod
     def _first_mapping_key(value: Any) -> Optional[str]:
-        """Return first key from a mapping-like payload when available."""
         if isinstance(value, dict) and value:
             return str(next(iter(value.keys())))
         return None
 
+    # Extract per-asset value from a dict payload with safe fallbacks.
     @staticmethod
     def _mapping_value_for_asset(value: Any, asset_key: str) -> Any:
-        """Extract per-asset value from a dict payload with safe fallbacks."""
         if not isinstance(value, dict):
             return value
 
@@ -263,8 +216,8 @@ class InferenceService:
 
         return next(iter(value.values())) if value else None
 
+    # Resolve asset key from flat or nested input payload.
     def _resolve_asset(self, payload: PredictRequest) -> str:
-        """Resolve asset key from flat or nested input payload."""
         if payload.asset is not None and str(payload.asset).strip():
             return str(payload.asset).strip().upper()
 
@@ -285,8 +238,8 @@ class InferenceService:
 
         raise ValueError("Unable to infer asset from payload. Provide asset or nested keyed input.")
 
+    # Resolve price value from flat or nested input payload.
     def _resolve_price(self, payload: PredictRequest, asset_key: str) -> float:
-        """Resolve current price from flat or nested input payload."""
         if payload.prices is not None:
             return float(payload.prices)
 
@@ -298,17 +251,17 @@ class InferenceService:
             raise ValueError("Price payload does not contain a usable value")
         return float(value)
 
+    # Resolve news text from flat or nested input payload.
     def _resolve_news_text(self, payload: PredictRequest, asset_key: str) -> str:
-        """Resolve daily news text from flat or nested payload."""
         news_value = self._mapping_value_for_asset(payload.news, asset_key)
         return self._coerce_optional_text(news_value)
 
+    # Resolve filing text from flat or nested input payload.
     def _resolve_filing_text(self, value: Any, asset_key: str) -> str:
-        """Resolve filing text from flat or nested payload."""
         return self._coerce_optional_text(self._mapping_value_for_asset(value, asset_key))
 
+    # Resolve momentum value from flat or nested input payload.
     def _resolve_momentum(self, payload: PredictRequest, asset_key: str) -> Optional[str | int | float]:
-        """Resolve momentum value from flat or nested payload."""
         momentum_value = self._mapping_value_for_asset(payload.momentum, asset_key)
         if momentum_value is None:
             return None
@@ -316,8 +269,8 @@ class InferenceService:
             return momentum_value
         return str(momentum_value)
 
+    # Resolve optional historical prices from nested payload.
     def _resolve_history_prices(self, payload: PredictRequest, asset_key: str) -> Optional[list[float]]:
-        """Resolve optional historical prices from nested payload."""
         if payload.history_price is None:
             return None
 
@@ -339,15 +292,9 @@ class InferenceService:
             return None
         return parsed_prices
 
+    # Convert momentum payload value into configured numeric representation.
     def _to_momentum_numeric(self, momentum: Optional[str | int | float]) -> int:
-        """Convert momentum payload value into configured numeric representation.
-
-        Args:
-            momentum: Raw momentum value.
-
-        Returns:
-            Encoded momentum integer.
-        """
+        
         if momentum is None:
             return int(self._momentum_mapping.get("missing", 0))
 
@@ -362,15 +309,9 @@ class InferenceService:
             return int(self._momentum_mapping.get("missing", 0))
         return int(mapped)
 
+    # Construct model input text from news and filing fields.
     def _build_text(self, payload: PredictRequest, asset_key: str) -> str:
-        """Construct model input text from news and filing fields.
-
-        Args:
-            payload: Incoming predict payload.
-
-        Returns:
-            Single normalized text string.
-        """
+        
         filing_10k_value = payload.ten_k if payload.ten_k is not None else payload.filing_10k
         filing_10q_value = payload.ten_q if payload.ten_q is not None else payload.filing_10q
 
@@ -384,9 +325,9 @@ class InferenceService:
         text = " ".join(text.split())
         return text
 
+    # Compute technical indicators and build tabular feature array.
     @staticmethod
     def _compute_rsi(prices: list[float], window: int = 14) -> float:
-        """Compute RSI from in-memory rolling prices with safe fallbacks."""
         if len(prices) < 2:
             return 50.0
 
@@ -413,7 +354,6 @@ class InferenceService:
 
     @staticmethod
     def _compute_ma_ratio(prices: list[float], short_window: int = 10, long_window: int = 30) -> float:
-        """Compute short/long moving average ratio with neutral fallback."""
         if len(prices) < 2:
             return 1.0
 
@@ -429,7 +369,6 @@ class InferenceService:
 
     @staticmethod
     def _compute_rolling_volatility(prices: list[float], window: int = 20) -> float:
-        """Compute rolling return volatility with robust low-sample fallback."""
         if len(prices) < 3:
             return 0.0
 
@@ -473,15 +412,9 @@ class InferenceService:
         tabular_values = [float(feature_values.get(column_name, 0.0)) for column_name in tabular_columns]
         return np.array([tabular_values], dtype=np.float32)
 
+    # Encode one text record with FinBERT and reduce with PCA to match model input space.
     def _encode_single_text(self, text: str) -> np.ndarray:
-        """Encode one text record using FinBERT and project to PCA space.
-
-        Args:
-            text: Input text.
-
-        Returns:
-            PCA-reduced embedding row with shape (1, n_components).
-        """
+        
         encoded = self.finbert_tokenizer(
             [text],
             padding=True,
@@ -502,15 +435,9 @@ class InferenceService:
         reduced_embedding = self.pca_model.transform(dense_embedding).astype(np.float32)
         return reduced_embedding
 
+    # Main function to run full inference.
     def predict(self, payload: PredictRequest) -> tuple[str, str]:
-        """Run full late-fusion inference and rationale generation.
-
-        Args:
-            payload: Daily payload.
-
-        Returns:
-            Tuple of decision string and rationale text.
-        """
+    
         asset_key = self._resolve_asset(payload)
         price_value = self._resolve_price(payload, asset_key)
         momentum_raw = self._resolve_momentum(payload, asset_key)
@@ -583,19 +510,14 @@ class InferenceService:
 
 
 def _resolve_config_path() -> Path:
-    """Resolve API config path from environment or project-relative fallback."""
     env_path = os.getenv("CLEF_CONFIG_PATH")
     if env_path:
         return Path(env_path)
     return Path(__file__).resolve().parents[2] / "configs" / "config.yaml"
 
-
+# Resolve fallback decision/rationale from config when available.
 def _load_fallback_response() -> dict[str, str]:
-    """Resolve fallback decision/rationale from config when available.
-
-    Returns:
-        Fallback response dictionary.
-    """
+   
     fallback = {
         "decision": DEFAULT_FALLBACK_DECISION,
         "rationale": DEFAULT_FALLBACK_RATIONALE,
@@ -615,13 +537,8 @@ def _load_fallback_response() -> dict[str, str]:
 
 _SERVICE: Optional[InferenceService] = None
 
-
+# Build and cache the singleton inference service.
 def _get_service() -> InferenceService:
-    """Build and cache the singleton inference service.
-
-    Returns:
-        Initialized InferenceService object.
-    """
     global _SERVICE
     if _SERVICE is None:
         config_path = _resolve_config_path()
@@ -629,16 +546,10 @@ def _get_service() -> InferenceService:
     return _SERVICE
 
 
+# API endpoint for prediction with full circuit-breaker fallback.
 @app.post("/predict", response_model=PredictResponse)
 def predict(payload: PredictRequest) -> PredictResponse:
-    """Predict one decision and one rationale with full circuit-breaker fallback.
-
-    Args:
-        payload: Daily JSON payload for one asset.
-
-    Returns:
-        Decision and rationale response.
-    """
+    
     try:
         service = _get_service()
         decision, rationale = service.predict(payload)
